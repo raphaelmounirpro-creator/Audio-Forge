@@ -86,4 +86,4 @@ npm run dev
 
 ## Code signing policy
 
-La candidature SignPath Foundation est en préparation ; AudioForge n'est pas encore admis ou signé. Voir la [politique de signature](CODE_SIGNING_POLICY.md), la [confidentialité](PRIVACY.md) et les [prérequis de candidature](docs/signing/PREPARATION.md). Le workflow manuel de validation ne publie aucune release ni aucun binaire par défaut.
+La candidature SignPath Foundation est en préparation ; AudioForge n'est pas encore admis ou signé. La [validation Windows GitHub](https://github.com/raphaelmounirpro-creator/Audio-Forge/actions/runs/43906288257) a réussi les tests, la compilation release et la génération NSIS, sans exporter de binaire téléchargeable. Voir la [politique de signature](CODE_SIGNING_POLICY.md), la [confidentialité](PRIVACY.md) et les [prérequis de candidature](docs/signing/PREPARATION.md). La signature doit être demandée manuellement après admission ; aucune release n'est publiée automatiquement.
