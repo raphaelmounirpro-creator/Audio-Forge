@@ -1,0 +1,160 @@
+name: Windows - validation et signature SignPath
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sign:
+        description: "Demander la signature après admission SignPath et validation de la licence"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: windows-signpath-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    if: github.repository == 'raphaelmounirpro-creator/Audio-Forge' && github.ref == 'refs/heads/main'
+    runs-on: windows-2025
+    timeout-minutes: 90
+    environment: ${{ (github.event_name == 'workflow_dispatch' && inputs.sign) && 'signpath-production' || 'unsigned-validation' }}
+    env:
+      RUSTUP_TOOLCHAIN: "1.98.1"
+      CARGO_HOME: ${{ github.workspace }}\.local\cargo
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "26.13.0"
+      - name: Vérifier les prérequis de publication
+        shell: pwsh
+        env:
+          SIGN_REQUESTED: ${{ github.event_name == 'workflow_dispatch' && inputs.sign }}
+          SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          SIGNPATH_ORGANIZATION_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          SIGNPATH_PROJECT_SLUG: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          SIGNPATH_POLICY_SLUG: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          SIGNPATH_APP_CONFIGURATION: ${{ vars.SIGNPATH_APP_CONFIGURATION }}
+          SIGNPATH_INSTALLER_CONFIGURATION: ${{ vars.SIGNPATH_INSTALLER_CONFIGURATION }}
+          SIGNPATH_FOUNDATION_ACCEPTED: ${{ vars.SIGNPATH_FOUNDATION_ACCEPTED }}
+        run: |
+          if (-not (Test-Path -LiteralPath LICENSE)) { throw 'La licence du projet doit être choisie et publiée avant cette compilation.' }
+          if ($env:SIGN_REQUESTED -eq 'true') {
+            if ($env:SIGNPATH_FOUNDATION_ACCEPTED -ne 'true') { throw 'Admission SignPath Foundation non confirmée.' }
+            foreach ($name in @('SIGNPATH_API_TOKEN','SIGNPATH_ORGANIZATION_ID','SIGNPATH_PROJECT_SLUG','SIGNPATH_POLICY_SLUG','SIGNPATH_APP_CONFIGURATION','SIGNPATH_INSTALLER_CONFIGURATION')) {
+              if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($name))) { throw ('Configuration manquante : ' + $name) }
+            }
+          }
+      - name: Installer Rust verrouillé
+        shell: pwsh
+        run: rustup toolchain install 1.98.1 --profile minimal
+      - name: Lire la version à signer
+        id: version
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Version de publication non prise en charge.' }
+          "value=$version" >> $env:GITHUB_OUTPUT
+      - run: npm ci
+      - run: npm run tools:fetch
+      - run: npm run tools:verify
+      - run: npm test
+      - run: npm run test:scripts
+      - name: Tests Rust
+        shell: pwsh
+        run: |
+          cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --lib --locked
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --features native-media-tests --test native_media --locked
+      - run: npm run test:media
+      - name: Construire l'application sans installateur
+        run: node scripts/desktop.mjs build --no-bundle -- --locked
+      - name: Application à signer
+        id: unsigned-app
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: AudioForge-application-unsigned
+          path: src-tauri/target/release/audioforge.exe
+          if-no-files-found: error
+          retention-days: 7
+      - name: Signer uniquement le programme AudioForge
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_APP_CONFIGURATION }}
+          github-artifact-id: ${{ steps.unsigned-app.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: .local/signpath/application
+          parameters: |
+            version: ${{ toJSON(steps.version.outputs.value) }}
+      - name: Vérifier et intégrer l'application signée
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        shell: pwsh
+        run: |
+          node scripts/verify-code-signature.mjs .local/signpath/application/audioforge.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Copy-Item -LiteralPath .local/signpath/application/audioforge.exe -Destination src-tauri/target/release/audioforge.exe
+      - name: Assembler NSIS sans modifier le programme signé
+        run: node scripts/desktop.mjs bundle --bundles nsis --no-binary-patching
+      - name: Revérifier la signature après assemblage
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        run: node scripts/verify-code-signature.mjs src-tauri/target/release/audioforge.exe
+      - name: Installateur à signer
+        id: unsigned-installer
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: AudioForge-installer-unsigned
+          path: src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error
+          retention-days: 7
+      - name: Signer l'installateur
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_INSTALLER_CONFIGURATION }}
+          github-artifact-id: ${{ steps.unsigned-installer.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: .local/signpath/installer
+          parameters: |
+            version: ${{ toJSON(steps.version.outputs.value) }}
+      - name: Vérifier l'installateur signé
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem -LiteralPath .local/signpath/installer -Filter *.exe -File)
+          if ($files.Count -ne 1) { throw 'Un seul installateur signé est attendu.' }
+          node scripts/verify-code-signature.mjs $files[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          (Get-FileHash -LiteralPath $files[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $files[0].Name | Set-Content .local/signpath/installer/SHA256SUMS.txt
+      - name: Conserver les fichiers signés pour contrôle humain
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: AudioForge-signed-review
+          path: |
+            .local/signpath/application/audioforge.exe
+            .local/signpath/installer/*
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

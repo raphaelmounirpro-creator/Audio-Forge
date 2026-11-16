@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.local/
+src-tauri/target/
+src-tauri/gen/
+src-tauri/binaries/*.exe
+src-tauri/binaries/*.dll
+test-results/
+playwright-report/
+*.log
+*.tsbuildinfo
+releases/**/*.exe

@@ -1,0 +1,40 @@
+[package]
+name = "audioforge"
+version = "0.1.0"
+description = "Gestionnaire multimédia local et gratuit"
+license = "MIT"
+repository = "https://github.com/raphaelmounirpro-creator/Audio-Forge"
+edition = "2021"
+rust-version = "1.88"
+
+[lib]
+name = "audioforge_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "audioforge"
+path = "src/main.rs"
+required-features = ["desktop"]
+
+[features]
+default = ["desktop"]
+desktop = ["dep:tauri", "dep:tauri-plugin-dialog", "dep:tauri-build"]
+native-media-tests = []
+
+[build-dependencies]
+tauri-build = { version = "2", features = [], optional = true }
+
+[dependencies]
+tauri = { version = "2", features = [], optional = true }
+tauri-plugin-dialog = { version = "2", optional = true }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.38", features = ["bundled"] }
+url = "2"
+uuid = { version = "1", features = ["v4", "serde"] }
+sha2 = "0.10"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"

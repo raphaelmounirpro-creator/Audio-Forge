@@ -1,0 +1,62 @@
+{
+  "name": "audioforge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "test:ui": "playwright test",
+    "tauri": "tauri",
+    "desktop:dev": "node scripts/desktop.mjs dev",
+    "desktop:build": "node scripts/desktop.mjs build",
+    "tools:verify": "node scripts/tools.mjs verify",
+    "tools:fetch": "node scripts/tools.mjs fetch",
+    "tools:pin": "node scripts/tools.mjs pin",
+    "test:media": "node scripts/test-media.mjs",
+    "setup:cpp": "node scripts/install-build-tools.mjs",
+    "diagnose:windows": "node scripts/diagnose-windows.mjs",
+    "setup:cpp:prepare": "node scripts/prepare-build-tools.mjs",
+    "test:scripts": "node --test tests/scripts/*.test.mjs",
+    "sandbox:prepare": "node scripts/prepare-sandbox.mjs",
+    "sandbox:open": "node scripts/open-sandbox.mjs",
+    "release:local": "node scripts/package-local-release.mjs",
+    "sandbox:status": "node scripts/sandbox-status.mjs",
+    "app:sandbox:prepare": "node scripts/prepare-app-sandbox.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.3.0",
+    "@tauri-apps/api": "2.12.4",
+    "@tauri-apps/plugin-dialog": "2.8.4",
+    "lucide-react": "1.73.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "@tailwindcss/vite": "4.3.5",
+    "@tauri-apps/cli": "2.12.4",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.12",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "fflate": "0.8.3",
+    "jsdom": "31.0.1",
+    "prettier": "3.10.1",
+    "tailwindcss": "4.3.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.8",
+    "vitest": "5.1.0",
+    "yaml": "2.9.1"
+  },
+  "license": "MIT",
+  "description": "Application Windows gratuite pour les médias autorisés et la conversion locale",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphaelmounirpro-creator/Audio-Forge.git"
+  }
+}

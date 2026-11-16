@@ -69,4 +69,21 @@ AudioForge est destiné aux contenus dont l'utilisateur détient les droits ou p
 
 ## Licence
 
-La licence finale du projet reste à définir après vérification des dépendances et de leurs obligations de redistribution. La gratuité du logiciel ne dispense pas du respect des licences tierces.
+Le code propre d'AudioForge est distribué sous [licence MIT](LICENSE). Les composants tiers conservent leurs licences et obligations, notamment le build FFmpeg GPLv3. Voir [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+
+## Développement
+
+Prérequis : Node.js, Rust stable MSVC, Microsoft C++ Build Tools avec SDK Windows, et WebView2 pour l'application de bureau.
+
+```powershell
+npm ci
+npm run tools:fetch
+npm run tools:verify
+npm run dev
+```
+
+`npm run dev` ouvre uniquement l'aperçu web ; les commandes natives nécessitent `npm run desktop:dev`. La compilation Windows se lance avec `npm run desktop:build`. Tests : `npm test`, `npm run test:scripts` et les suites Rust décrites dans le workflow.
+
+## Code signing policy
+
+La candidature SignPath Foundation est en préparation ; AudioForge n'est pas encore admis ou signé. Voir la [politique de signature](CODE_SIGNING_POLICY.md), la [confidentialité](PRIVACY.md) et les [prérequis de candidature](docs/signing/PREPARATION.md). Le workflow manuel de validation ne publie aucune release ni aucun binaire par défaut.

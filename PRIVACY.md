@@ -1,0 +1,23 @@
+# Confidentialité d'AudioForge — projet de politique
+
+Ce document décrit la version de développement et doit être relu avant publication d'une version signée.
+
+## Données locales
+
+Les préférences, la file et l'historique sont conservés dans une base SQLite locale. Les URL sources, titres et chemins peuvent y figurer. Les fichiers téléchargés sont enregistrés dans le dossier choisi. La base n'est pas chiffrée par AudioForge. Effacer une entrée d'historique ne supprime pas son fichier.
+
+## Connexions
+
+AudioForge n'intègre ni compte utilisateur, télémétrie ni service cloud AudioForge. L'analyse et le téléchargement établissent des connexions avec les plateformes et infrastructures de diffusion nécessaires au lien demandé. Ces services reçoivent notamment les informations réseau habituelles, dont l'adresse IP. Ne pas placer de liens confidentiels dans l'historique si ce stockage local ne convient pas.
+
+La récupération manuelle des composants utilise leurs distributeurs HTTPS déclarés dans `sources.lock.json`. L'installateur peut télécharger le runtime Microsoft WebView2 s'il manque. Le comportement et les conditions des plateformes, distributeurs et du runtime Microsoft restent distincts de ceux du code AudioForge ; leurs notices doivent être finalisées dans l'inventaire tiers avant diffusion.
+
+Les services de signature et d'intégration concernent la maintenance du projet. Ils ne sont pas nécessaires pour utiliser le logiciel une fois installé. Aucun jeton de signature ou secret de maintenance n'est distribué avec l'application.
+
+## Environnement isolé
+
+Les données du disque jetable de Windows Sandbox sont supprimées à sa fermeture. Les fichiers copiés dans le dossier d'export partagé restent sur le PC hôte. Si l'utilisateur autorise le presse-papiers partagé, son contenu devient accessible aux applications de Sandbox.
+
+## État de vérification
+
+Les politiques des composants tiers et du runtime, les données des diagnostics et les limites de protection réseau doivent être revues avant candidature définitive. Cette politique ne vaut pas attestation juridique ou audit complet de confidentialité.
