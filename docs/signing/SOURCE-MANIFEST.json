@@ -2,8 +2,8 @@
   "status": "ready-for-user-review",
   "published": false,
   "licenseApplied": true,
-  "files": 100,
-  "totalBytes": 835886,
+  "files": 102,
+  "totalBytes": 841098,
   "findings": [],
   "manifest": [
     {
@@ -52,9 +52,19 @@
       "sha256": "287ecc7122bea50d35318b2db1530932f6c87b4798ad8f8b9237a1afd2781e28"
     },
     {
+      "file": "docs/distribution/SOURCE-REQUESTS.md",
+      "bytes": 3085,
+      "sha256": "fc02be31d5e533b2ef96de3c6fae630201d581f4a357af68310ddeba9c340a59"
+    },
+    {
       "file": "docs/distribution/STATUS.json",
       "bytes": 1229,
       "sha256": "26605c9d43e581f7ab8eb636c4eb614992642b07e979e6025425b89e299a45d0"
+    },
+    {
+      "file": "docs/distribution/VALIDATION.md",
+      "bytes": 2127,
+      "sha256": "5e0f70236e1c26a4e8de5d0f32bf858df7c31632706327243f202220612ad114"
     },
     {
       "file": "docs/signing/application.xml",
