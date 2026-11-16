@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "reviewedForPublicBinaryDistribution": false,
+  "blockers": [
+    "FFmpeg Gyan 9.0.2 : sources, versions, correctifs et scripts de construction des bibliothèques statiques à obtenir ; le seul commit FFmpeg est insuffisant.",
+    "yt-dlp 2026.10.26 : sources exactes et recette de construction des dépendances incluses dans yt-dlp.exe à inventorier et rendre accessibles.",
+    "Deno v2.9.8 : notices des dépendances réellement embarquées à compléter.",
+    "AudioForge : notices des dépendances npm et Cargo réellement embarquées à compléter.",
+    "Reconstruire puis tester l’installateur contenant les notices corrigées ; ne pas publier l’ancien installateur local."
+  ],
+  "knownSourceReferences": {
+    "ffmpeg": "https://github.com/FFmpeg/FFmpeg/commit/946fcce07b",
+    "ffmpegDistributor": "https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2",
+    "ytDlp": "https://github.com/yt-dlp/yt-dlp/tree/2026.10.26",
+    "ytDlpSourceTarball": "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.26/yt-dlp.tar.gz",
+    "ytDlpBuildRecipe": "https://github.com/yt-dlp/yt-dlp/tree/2026.10.26/.github/workflows",
+    "deno": "https://github.com/denoland/deno/tree/v2.9.8"
+  }
+}

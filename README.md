@@ -2,6 +2,10 @@
 
 Application Windows 10/11 x64 en français pour récupérer des contenus audio et vidéo autorisés, choisir leur format et organiser les fichiers sur son ordinateur.
 
+## Téléchargement
+
+Les versions publiques seront proposées sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur n’est encore disponible : la [préparation de la release 0.1.0](docs/distribution/README.md) détaille les sources et notices restantes. L’ancien installateur local ne contient pas ces corrections.
+
 ## But du projet
 
 AudioForge rend les outils yt-dlp et FFmpeg accessibles dans une interface de bureau. Le parcours principal est simple : coller un lien, analyser le média, choisir un format et suivre son traitement dans une file d'attente.
@@ -86,4 +90,4 @@ npm run dev
 
 ## Code signing policy
 
-La candidature SignPath Foundation est en préparation ; AudioForge n'est pas encore admis ou signé. La [validation Windows GitHub](https://github.com/raphaelmounirpro-creator/Audio-Forge/actions/runs/43906288257) a réussi les tests, la compilation release et la génération NSIS, sans exporter de binaire téléchargeable. Voir la [politique de signature](CODE_SIGNING_POLICY.md), la [confidentialité](PRIVACY.md) et les [prérequis de candidature](docs/signing/PREPARATION.md). La signature doit être demandée manuellement après admission ; aucune release n'est publiée automatiquement.
+La candidature SignPath Foundation a été envoyée et sa réception confirmée ; AudioForge n'est pas encore admis ou signé. La [validation Windows GitHub](https://github.com/raphaelmounirpro-creator/Audio-Forge/actions/runs/43906288257) a réussi les tests, la compilation release et la génération NSIS, sans exporter de binaire téléchargeable. Voir la [politique de signature](CODE_SIGNING_POLICY.md), la [confidentialité](PRIVACY.md) et les [prérequis de candidature](docs/signing/PREPARATION.md). La signature doit être demandée manuellement après admission ; aucune release n'est publiée automatiquement.

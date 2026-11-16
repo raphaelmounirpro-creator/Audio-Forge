@@ -2,10 +2,15 @@
   "status": "ready-for-user-review",
   "published": false,
   "licenseApplied": true,
-  "files": 90,
-  "totalBytes": 544924,
+  "files": 100,
+  "totalBytes": 835886,
   "findings": [],
   "manifest": [
+    {
+      "file": ".gitattributes",
+      "bytes": 124,
+      "sha256": "6994f156c56af6ed5b0ba9349ffd07d24bd579028f6e77fdab206674909e7d01"
+    },
     {
       "file": ".github/actions.lock.json",
       "bytes": 441,
@@ -13,8 +18,8 @@
     },
     {
       "file": ".github/workflows/windows-signpath.yml",
-      "bytes": 8059,
-      "sha256": "1a5f5bbbdb3588ae13c40130bbd1f3c521132de87fa8b8d98b706888740611f0"
+      "bytes": 8234,
+      "sha256": "8e2d4864a52df4a16648cb2deabb657d37907dee73b717e366be21a80e4bd4d4"
     },
     {
       "file": ".gitignore",
@@ -37,14 +42,29 @@
       "sha256": "9efe7edf55fbce77b37f74ad6b5cc11bfe344e6f1be857105330e253248b5e5f"
     },
     {
+      "file": "docs/distribution/README.md",
+      "bytes": 3330,
+      "sha256": "b8436397f132c7754fe795bafc48a6975e9088212a7fc12a2ef275d1b51c75eb"
+    },
+    {
+      "file": "docs/distribution/RELEASE-0.1.0.md",
+      "bytes": 1792,
+      "sha256": "287ecc7122bea50d35318b2db1530932f6c87b4798ad8f8b9237a1afd2781e28"
+    },
+    {
+      "file": "docs/distribution/STATUS.json",
+      "bytes": 1229,
+      "sha256": "26605c9d43e581f7ab8eb636c4eb614992642b07e979e6025425b89e299a45d0"
+    },
+    {
       "file": "docs/signing/application.xml",
       "bytes": 457,
       "sha256": "cf14455cd4c69a06266a8d9048686e9fb00fc75da923a08be13f4c6e88b1a470"
     },
     {
       "file": "docs/signing/CANDIDATURE.md",
-      "bytes": 2665,
-      "sha256": "66004e308e8c4945986340bd5e8b713365bc5a67e7b8bb124fc977c1a7859a31"
+      "bytes": 2833,
+      "sha256": "4a69a22e9b269ff9952603bffe4e14c95ba8b4ab2c10bb432caf329e0f207f92"
     },
     {
       "file": "docs/signing/GPL-3.0-or-later.proposed.txt",
@@ -63,13 +83,13 @@
     },
     {
       "file": "docs/signing/PREPARATION.md",
-      "bytes": 3910,
-      "sha256": "7175083b7815efb6354aa711fb2a09b496d943c12149352be6439686ee1ebb04"
+      "bytes": 4042,
+      "sha256": "4b4868a755bb82a7b08bea42d46e824874b60f28ae7043c94eb4cfddc782d145"
     },
     {
       "file": "docs/signing/VALIDATION.md",
-      "bytes": 2553,
-      "sha256": "d03ffab24beefb8ce06f752cbdc758616afb870d07612bf5a922ea6c3293346b"
+      "bytes": 3621,
+      "sha256": "dc581647d119e41838628211c0974b58f4461fc37bab149366ad9732f18931da"
     },
     {
       "file": "index.html",
@@ -88,8 +108,8 @@
     },
     {
       "file": "package.json",
-      "bytes": 2137,
-      "sha256": "8e84945d78fa43dee107b653373ab07d8e400d26037dcd69b59e384141aa45ce"
+      "bytes": 2252,
+      "sha256": "a4ddea5c608449c1e8b6f0818ff299114095d7ad38a32a00f1d14f1c950700ef"
     },
     {
       "file": "playwright.config.ts",
@@ -103,8 +123,13 @@
     },
     {
       "file": "README.md",
-      "bytes": 6235,
-      "sha256": "b50f6829bdc304b047d82eb386906572d141d286ee8ae06a31cba5b82f4cdb2d"
+      "bytes": 6883,
+      "sha256": "1e91ee83338401af4e374de9a7fcec5c6fd7d5667ab53b3e13403f6211deafeb"
+    },
+    {
+      "file": "scripts/check-distribution.mjs",
+      "bytes": 715,
+      "sha256": "65cf2369531dd80e5a3e41036cf55f96d7afbe37783d0786271b99cef0b741a2"
     },
     {
       "file": "scripts/code-signature.mjs",
@@ -158,8 +183,8 @@
     },
     {
       "file": "scripts/prepare-signpath-candidate.mjs",
-      "bytes": 3629,
-      "sha256": "58a95397cb877aa3e459ff1f18f046c6b68e0d5fa473d1426f73eb6b02a556ab"
+      "bytes": 4432,
+      "sha256": "3e77ff104cbd8c755273329fd7d0e5d13d26abb77029ae3130d3367e02509a39"
     },
     {
       "file": "scripts/sandbox-build.mjs",
@@ -192,14 +217,19 @@
       "sha256": "c5fb4c55a5545f0b8c8c6ef364c57c420d3fcfdaf93fa59875ffe5a7c1ea4145"
     },
     {
+      "file": "scripts/tool-notices.mjs",
+      "bytes": 2759,
+      "sha256": "0ad61e0f7ad5ae7d390f9688c16bc5999413d5a63b2d3324482467cacf055c0e"
+    },
+    {
       "file": "scripts/tool-sources.mjs",
       "bytes": 1143,
       "sha256": "7520acda526c62ec0b3c58c7e853ee67447df999187ed56728b9d4b3a98f0ae2"
     },
     {
       "file": "scripts/tools.mjs",
-      "bytes": 5569,
-      "sha256": "9ad576117bae63cf2295f8263c362934acdd650cb6f968f7d566d78b9b187705"
+      "bytes": 6039,
+      "sha256": "dae2804e5e146d0590b6f653998868457524c4787c1dd44445e19bafa06be030"
     },
     {
       "file": "scripts/verify-code-signature.mjs",
@@ -207,19 +237,19 @@
       "sha256": "004727902862f2778fb59142fd2233c099d6d63b47f5021a85597fad4b78c8cf"
     },
     {
-      "file": "src-tauri/binaries/licenses/BtbN-FFmpeg-Builds/LICENSE.txt",
-      "bytes": 7651,
-      "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
-    },
-    {
-      "file": "src-tauri/binaries/licenses/BtbN-FFmpeg-Builds/SOURCE.txt",
-      "bytes": 273,
-      "sha256": "58ecf3c36de178eab0e10b3aa16af36a8310b2f59839da93065e322dd228f540"
+      "file": "src-tauri/binaries/licenses/denoland-deno/LICENSE.md",
+      "bytes": 1074,
+      "sha256": "f62497fffecc0852960c8d3e6934b9db86d16396e9b604072e923892cae3a588"
     },
     {
       "file": "src-tauri/binaries/licenses/denoland-deno/SOURCE.txt",
       "bytes": 236,
       "sha256": "70ab29e85adf5901c8b8e8aa03cb00e6125e7746c7f996703a3b1b038a7758a2"
+    },
+    {
+      "file": "src-tauri/binaries/licenses/GyanD-codexffmpeg/COPYING.GPLv3",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
     },
     {
       "file": "src-tauri/binaries/licenses/GyanD-codexffmpeg/LICENSE",
@@ -232,9 +262,24 @@
       "sha256": "14e1368e79f92548687e5f1b85211fdaa2cf926a48b88ad6d4c206dfef492b63"
     },
     {
+      "file": "src-tauri/binaries/licenses/yt-dlp-yt-dlp/LICENSE",
+      "bytes": 1211,
+      "sha256": "7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c"
+    },
+    {
       "file": "src-tauri/binaries/licenses/yt-dlp-yt-dlp/SOURCE.txt",
       "bytes": 227,
       "sha256": "1e6388975c49edd8184397507914c1d6cf246927ec2cc7f485c124a42450d923"
+    },
+    {
+      "file": "src-tauri/binaries/licenses/yt-dlp-yt-dlp/THIRD_PARTY_LICENSES.txt",
+      "bytes": 243550,
+      "sha256": "472aefe951c7db35e1657c1d13fd337140511ed6f2b329205105ad441c5a02b7"
+    },
+    {
+      "file": "src-tauri/binaries/notices.lock.json",
+      "bytes": 1198,
+      "sha256": "ec778f88531a4325178f9374eaf126a6e4a352eeca265a388325af2444a6383a"
     },
     {
       "file": "src-tauri/binaries/README.md",
@@ -432,6 +477,11 @@
       "sha256": "ac056c85073b6c05224a9ac5541e68ef610c6ac4df6ebc223b80725f8d9dec81"
     },
     {
+      "file": "tests/scripts/tool-notices.test.mjs",
+      "bytes": 2830,
+      "sha256": "7bdabaf9f9b00ec81ba2f049cdb661f779384cb10a13ddc878ede95ef673ab1a"
+    },
+    {
       "file": "tests/scripts/tool-sources.test.mjs",
       "bytes": 1202,
       "sha256": "5e4e0ae55979480fa9a09a677658fd14c8b054c79e506dd0414ce1c6f28d2abd"
@@ -443,8 +493,8 @@
     },
     {
       "file": "THIRD_PARTY_LICENSES.md",
-      "bytes": 3552,
-      "sha256": "fa84da7b0baec6e5a5ed3c7404a2b04c1288db976fd79c1085cea0cb623c61c9"
+      "bytes": 3900,
+      "sha256": "417b635228d53c036da387f6f0c9b50227c86d761005b8f6162f487a5d60d654"
     },
     {
       "file": "tsconfig.json",

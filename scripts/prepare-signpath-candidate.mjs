@@ -18,6 +18,7 @@ const selections = [
   "src-tauri/binaries/README.md",
   "src-tauri/binaries/sources.lock.json",
   "src-tauri/binaries/tool-lock.json",
+  "src-tauri/binaries/notices.lock.json",
   "src-tauri/binaries/licenses",
   "scripts",
   "tests",
@@ -27,6 +28,7 @@ const selections = [
   "package-lock.json",
   ".npmrc",
   ".gitignore",
+  ".gitattributes",
   "index.html",
   "tsconfig.json",
   "vite.config.ts",
@@ -36,6 +38,7 @@ const selections = [
   "CODE_SIGNING_POLICY.md",
   "PRIVACY.md",
   "docs/signing",
+  "docs/distribution",
 ];
 // Selection is explicit: no .local, account/session data, build outputs or installers.
 for (const source of selections) {
@@ -49,6 +52,18 @@ for (const source of selections) {
 await cp(resolve("docs/GITHUB-README.md"), join(target, "README.md"));
 const manifest = [];
 const findings = [];
+// Preserve upstream copyright/contact notices verbatim. This exception only
+// covers email detection in files whose exact bytes match the reviewed lock;
+// token, private-key and personal-path detection still apply everywhere.
+const noticeRecords = JSON.parse(
+  await readFile(resolve("src-tauri/binaries/notices.lock.json"), "utf8"),
+);
+const upstreamNoticeHashes = new Map(
+  noticeRecords.map((r) => [
+    `src-tauri/binaries/licenses/${r.component.replace("/", "-")}/${r.file}`,
+    r.sha256,
+  ]),
+);
 const patterns = [
   ["access-token", /(?:gh[pousr]_|github_pat_)[a-zA-Z0-9_]{20,}/],
   ["private-key", /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],
@@ -81,7 +96,15 @@ async function scan(directory) {
     ) {
       const text = bytes.toString("utf8");
       for (const [kind, pattern] of patterns)
-        if (pattern.test(text)) findings.push({ file: name, kind });
+        if (
+          pattern.test(text) &&
+          !(
+            kind === "personal-email" &&
+            upstreamNoticeHashes.get(name) ===
+              createHash("sha256").update(bytes).digest("hex")
+          )
+        )
+          findings.push({ file: name, kind });
     }
     manifest.push({
       file: name,

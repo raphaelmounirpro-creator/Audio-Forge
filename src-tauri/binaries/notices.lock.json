@@ -1,0 +1,30 @@
+[
+  {
+    "component": "yt-dlp/yt-dlp",
+    "version": "2026.10.26",
+    "file": "LICENSE",
+    "url": "https://raw.githubusercontent.com/yt-dlp/yt-dlp/f264a6cbd1f630894da0f368df00f8aae50140e0/LICENSE",
+    "sha256": "7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c"
+  },
+  {
+    "component": "yt-dlp/yt-dlp",
+    "version": "2026.10.26",
+    "file": "THIRD_PARTY_LICENSES.txt",
+    "url": "https://raw.githubusercontent.com/yt-dlp/yt-dlp/f264a6cbd1f630894da0f368df00f8aae50140e0/THIRD_PARTY_LICENSES.txt",
+    "sha256": "472aefe951c7db35e1657c1d13fd337140511ed6f2b329205105ad441c5a02b7"
+  },
+  {
+    "component": "denoland/deno",
+    "version": "v2.9.8",
+    "file": "LICENSE.md",
+    "url": "https://raw.githubusercontent.com/denoland/deno/fe7ed012d92c642fd8e5607ac5a45d517538b5c5/LICENSE.md",
+    "sha256": "f62497fffecc0852960c8d3e6934b9db86d16396e9b604072e923892cae3a588"
+  },
+  {
+    "component": "GyanD/codexffmpeg",
+    "version": "9.0.2",
+    "file": "COPYING.GPLv3",
+    "url": "https://raw.githubusercontent.com/FFmpeg/FFmpeg/946fcce07b6dcd0331c8cc609192aeff5e1924f8/COPYING.GPLv3",
+    "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+  }
+]

@@ -67,6 +67,9 @@ jobs:
       - run: npm ci
       - run: npm run tools:fetch
       - run: npm run tools:verify
+      - name: Vérifier les obligations de distribution avant signature
+        if: github.event_name == 'workflow_dispatch' && inputs.sign
+        run: npm run release:check
       - run: npm test
       - run: npm run test:scripts
       - name: Tests Rust

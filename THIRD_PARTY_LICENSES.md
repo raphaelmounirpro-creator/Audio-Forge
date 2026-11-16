@@ -8,9 +8,9 @@ Versions et archives exactes : `src-tauri/binaries/sources.lock.json`. Empreinte
 
 | Composant | Source retenue | État des obligations |
 | --- | --- | --- |
-| yt-dlp 2026.10.26, exécutable Windows autonome | [Release](https://github.com/yt-dlp/yt-dlp/releases/tag/2026.10.26) | Le projet distingue le code source et les exécutables embarquant d'autres composants. Ne pas appliquer automatiquement l'Unlicense du code au binaire complet ; contrôler la section officielle [License](https://github.com/yt-dlp/yt-dlp#license), les dépendances et leurs sources avant distribution. Notices complètes encore à rassembler. |
-| FFmpeg/ffprobe 9.0.2 Essentials Gyan | [Distributeur](https://www.gyan.dev/ffmpeg/builds/) référencé par [FFmpeg](https://www.ffmpeg.org/download.html) | Build **GPLv3**, annoncé ainsi par le distributeur et confirmé par ses options `--enable-gpl --enable-version3`. Le texte `LICENSE` est dans `src-tauri/binaries/licenses/GyanD-codexffmpeg/`. Sources correspondantes et notices tierces encore à archiver avant distribution publique. Les mentions du premier build BtbN conservées dans l'arbre ne décrivent plus le composant actif. |
-| Deno v2.9.8 | [Release](https://github.com/denoland/deno/releases/tag/v2.9.8) | Licence du projet et notices de ses dépendances à conserver. [Licence source](https://github.com/denoland/deno/blob/v2.9.8/LICENSE.md). Inventaire du binaire complet encore à terminer. |
+| yt-dlp 2026.10.26, exécutable Windows autonome | [Release](https://github.com/yt-dlp/yt-dlp/releases/tag/2026.10.26) | Le binaire autonome combiné relève de **GPLv3+**, selon la [documentation officielle](https://github.com/yt-dlp/yt-dlp/tree/2026.10.26#licensing). Les textes exacts `LICENSE` et `THIRD_PARTY_LICENSES.txt` sont inclus dans `licenses/yt-dlp-yt-dlp/`, avec commit et SHA-256 dans `notices.lock.json`. Sources exactes des dépendances et recette complète encore à inventorier. |
+| FFmpeg/ffprobe 9.0.2 Essentials Gyan | [Distributeur](https://www.gyan.dev/ffmpeg/builds/) référencé par [FFmpeg](https://www.ffmpeg.org/download.html) | Build **GPLv3**, confirmé par `--enable-gpl --enable-version3`. Textes `LICENSE` et `COPYING.GPLv3` dans `licenses/GyanD-codexffmpeg/`. Commit moteur identifié : `946fcce07b`. Versions, sources et scripts des bibliothèques statiques encore à obtenir : le commit moteur seul est insuffisant. Les notices BtbN obsolètes ont été retirées. |
+| Deno v2.9.8 | [Release](https://github.com/denoland/deno/releases/tag/v2.9.8) | Le texte MIT exact est inclus dans `licenses/denoland-deno/LICENSE.md`, avec commit et SHA-256 dans `notices.lock.json`. L’inventaire et les notices des dépendances du binaire complet restent à terminer. |
 
 Les fichiers `SOURCE.txt` indiquent la provenance et l'empreinte des archives ; **ils ne remplacent ni les textes de licence ni les sources correspondantes exigibles**.
 
@@ -28,3 +28,7 @@ Les fichiers `SOURCE.txt` indiquent la provenance et l'empreinte des archives ; 
 - WebView2 : composant Microsoft soumis à ses propres conditions d'installation/redistribution ; le bootstrapper n'est pas assimilé à une bibliothèque sous licence open source du projet.
 
 Avant distribution : produire l'inventaire détaillé, copier les notices exactes, relever la configuration FFmpeg, fournir ou proposer les sources lorsque nécessaire, puis fixer la licence du projet et vérifier l'installateur. Aucune dépendance payante n'est imposée.
+
+## Blocage de publication
+
+Voir [le dossier de release](docs/distribution/README.md) et [les points non résolus](docs/distribution/STATUS.json). `npm run release:check` échoue tant que ces points restent ouverts. La présence des textes de licence est vérifiée indépendamment de la disponibilité des sources correspondantes.

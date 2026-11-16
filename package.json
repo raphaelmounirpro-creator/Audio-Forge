@@ -23,7 +23,9 @@
     "sandbox:open": "node scripts/open-sandbox.mjs",
     "release:local": "node scripts/package-local-release.mjs",
     "sandbox:status": "node scripts/sandbox-status.mjs",
-    "app:sandbox:prepare": "node scripts/prepare-app-sandbox.mjs"
+    "app:sandbox:prepare": "node scripts/prepare-app-sandbox.mjs",
+    "tools:notices": "node scripts/tools.mjs notices",
+    "release:check": "node scripts/check-distribution.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "5.3.0",

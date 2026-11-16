@@ -1,5 +1,0 @@
-BtbN/FFmpeg-Builds
-latest
-https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/tag/latest
-https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-lgpl.zip
-sha256:c23acc0abd7c5b097c7a69127d2cfecb08cfd914c1f9900dd8f6b35ccb79aa12

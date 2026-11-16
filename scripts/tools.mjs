@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { unzip } from "fflate";
 import { stableFfmpegSource } from "./tool-sources.mjs";
+import { syncNotices } from "./tool-notices.mjs";
 
 const root = resolve("src-tauri/binaries");
 const sourceFile = join(root, "sources.lock.json");
@@ -135,7 +136,18 @@ async function fetchTools() {
     );
   }
   await writeFile(finalFile, JSON.stringify(records, null, 2) + "\n");
+  await notices(true);
   await verify();
+}
+async function notices(download = false) {
+  await syncNotices(
+    root,
+    JSON.parse(await readFile(sourceFile, "utf8")),
+    JSON.parse(await readFile(join(root, "notices.lock.json"), "utf8")),
+    download
+      ? async (url) => Buffer.from(await (await get(url)).arrayBuffer())
+      : undefined,
+  );
 }
 async function verify() {
   const records = JSON.parse(await readFile(finalFile, "utf8"));
@@ -148,13 +160,16 @@ async function verify() {
       throw new Error(`${name} absent ou altéré.`);
     console.log(`${name} ${record.version} : SHA-256 valide`);
   }
+  await notices();
 }
 const command = process.argv[2];
 try {
   if (command === "pin") await pin();
   else if (command === "fetch") await fetchTools();
   else if (command === "verify") await verify();
-  else throw new Error("Usage : node scripts/tools.mjs pin|fetch|verify");
+  else if (command === "notices") await notices(true);
+  else
+    throw new Error("Usage : node scripts/tools.mjs pin|fetch|verify|notices");
 } catch (error) {
   console.error(error.message);
   process.exitCode = 1;
