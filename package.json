@@ -26,7 +26,10 @@
     "app:sandbox:prepare": "node scripts/prepare-app-sandbox.mjs",
     "tools:notices": "node scripts/tools.mjs notices",
     "notices:deps": "node scripts/dependency-notices.mjs generate",
-    "release:check": "node scripts/check-distribution.mjs"
+    "release:check": "node scripts/check-distribution.mjs",
+    "web:dev": "vite --mode web --host 127.0.0.1",
+    "web:build": "tsc -b && vite build --mode web",
+    "web:preview": "vite preview --mode web --host 127.0.0.1"
   },
   "dependencies": {
     "@fontsource/inter": "5.3.0",
@@ -37,6 +40,9 @@
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@ffmpeg/core": "0.12.10",
+    "@ffmpeg/ffmpeg": "0.12.15",
+    "@ffmpeg/util": "0.12.2",
     "@playwright/test": "1.65.1",
     "@tailwindcss/vite": "4.3.5",
     "@tauri-apps/cli": "2.12.4",

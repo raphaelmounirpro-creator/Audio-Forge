@@ -2,6 +2,28 @@
 
 Application Windows 10/11 x64 en français pour récupérer des contenus audio et vidéo autorisés, choisir leur format et organiser les fichiers sur son ordinateur.
 
+## Version web
+
+Le site AudioForge convertit des fichiers audio et vidéo **directement dans le navigateur**, avec FFmpeg compilé en WebAssembly ([ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm)). Les fichiers ne sont envoyés à aucun serveur. Il n'y a rien à installer et aucune signature de code n'est nécessaire.
+
+| | Version web | Application Windows |
+| --- | --- | --- |
+| Fichiers de l'ordinateur | MP3, M4A, Opus, FLAC, WAV ; MP4, MKV, WebM | Oui |
+| Liens YouTube, Vimeo, playlists | Non : le navigateur ne peut pas les lire (CORS, extracteurs yt-dlp) | Oui |
+| Liens directs vers un fichier | Si le site l'autorise (Wikimedia Commons, certains fichiers Archive.org) | Oui |
+| Taille maximale | 1 Go par fichier (mémoire WebAssembly) | Disque |
+| Vitesse | Plus lente, surtout pour le réencodage vidéo | Native |
+
+Le site est un build statique du même code React (`npm run web:build`, dossier `dist/`). Le moteur ffmpeg.wasm (32 Mo, environ 10 Mo compressé) est servi par le site lui-même et n'est chargé qu'à la première conversion. Le build de l'application de bureau (`npm run build`) ne le contient pas.
+
+### Déploiement sur Vercel
+
+1. Sur [vercel.com](https://vercel.com/new), importer le dépôt GitHub `Audio-Forge`.
+2. Garder les réglages proposés : ils sont lus dans [vercel.json](vercel.json) (`npm ci`, `npm run web:build`, sortie `dist`).
+3. Déployer. Chaque push sur `main` redéploie ensuite le site.
+
+`vercel.json` définit aussi une politique de sécurité du contenu stricte et la mise en cache des fichiers versionnés. `npm run web:preview` applique les mêmes en-têtes en local.
+
 ## Téléchargement
 
 Les versions publiques seront proposées sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur n’est encore disponible : la [préparation de la release 0.1.0](docs/distribution/README.md) détaille les points restants. L’ancien installateur local embarque encore yt-dlp, FFmpeg et Deno, et ne sera pas publié.
@@ -88,7 +110,9 @@ npm run tools:verify
 npm run dev
 ```
 
-`npm run dev` ouvre uniquement l'aperçu web ; les commandes natives nécessitent `npm run desktop:dev`. La compilation Windows se lance avec `npm run desktop:build`. Tests : `npm test`, `npm run test:scripts` et les suites Rust décrites dans le workflow.
+Version web : `npm run web:dev` (développement), `npm run web:build` puis `npm run web:preview` (build de production). `npm run test:ui` lance les tests navigateur sur ce build, dont une vraie conversion WAV → MP3.
+
+`npm run dev` ouvre uniquement l'aperçu de l'interface de bureau ; les commandes natives nécessitent `npm run desktop:dev`. La compilation Windows se lance avec `npm run desktop:build`. Tests : `npm test`, `npm run test:scripts` et les suites Rust décrites dans le workflow.
 
 ## Code signing policy
 

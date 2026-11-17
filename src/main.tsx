@@ -7,8 +7,19 @@ import "@fontsource/inter/latin-700.css";
 import "./styles.css";
 import { App } from "./App";
 
+// The website build (`vite --mode web`) shows the in-browser converter.
+// Other builds drop this branch, so the desktop bundle never contains
+// ffmpeg.wasm.
+const Root = __AUDIOFORGE_WEB__
+  ? React.lazy(() =>
+      import("./web/WebApp").then((m) => ({ default: m.WebApp })),
+    )
+  : App;
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <React.Suspense fallback={null}>
+      <Root />
+    </React.Suspense>
   </React.StrictMode>,
 );

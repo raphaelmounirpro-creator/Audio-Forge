@@ -14,6 +14,18 @@ L'installateur ne contient ni yt-dlp, ni FFmpeg/ffprobe, ni Deno, et `npm run re
 
 Les textes de licence amont restent conservés dans `src-tauri/binaries/licenses/` pour référence, verrouillés par `notices.lock.json`. Ils ne sont plus copiés dans l'installateur.
 
+## Version web (site)
+
+Le site distribue, sans modification, les paquets npm suivants. Ils ne font pas partie de l'application de bureau : ils sont déclarés en `devDependencies` et absents du build `npm run build`.
+
+| Paquet | Version | Licence | Rôle |
+| --- | --- | --- | --- |
+| @ffmpeg/core | 0.12.10 | **GPL-2.0-or-later** | FFmpeg compilé en WebAssembly, avec LAME, x264, x265, libvpx, Opus, Vorbis et d'autres bibliothèques |
+| @ffmpeg/ffmpeg | 0.12.15 | MIT | Pilotage du moteur dans un worker |
+| @ffmpeg/util | 0.12.2 | MIT | Utilitaires |
+
+Le site renvoie au [code source de ffmpeg.wasm 0.12.10](https://github.com/ffmpegwasm/ffmpeg.wasm/tree/v0.12.10), qui fixe les versions de FFmpeg et des bibliothèques compilées. **À confirmer :** la GPL demande que le distributeur fournisse lui-même la source correspondante. Le plus sûr est de publier sur le site, ou dans une release GitHub, une archive des sources de ffmpeg.wasm 0.12.10 et de ses sous-modules, avec le texte de la GPL.
+
 ## Dépendances applicatives
 
 `npm run notices:deps` génère [src-tauri/notices/THIRD_PARTY_NOTICES.txt](src-tauri/notices/THIRD_PARTY_NOTICES.txt), installé avec l'application. Ce fichier reproduit les licences des composants compilés dans `audioforge.exe` ou intégrés à son interface. L'[inventaire](src-tauri/notices/inventory.json) indique pour chacun la version, la licence déclarée et l'empreinte de chaque texte. `npm run release:check` refuse des notices qui ne correspondent plus à `package-lock.json`, `src-tauri/Cargo.lock` ou aux compléments verrouillés.
