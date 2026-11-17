@@ -399,6 +399,18 @@ main {
   grid-template-columns: 1.15fr 1fr 1fr;
   gap: 20px;
 }
+.profile-controls {
+  align-items: end;
+  margin-bottom: 1.25rem;
+}
+.profile-controls button {
+  justify-self: start;
+  margin-bottom: 0;
+}
+.playlist-summary {
+  margin-block: 0.75rem;
+  overflow-wrap: anywhere;
+}
 .field {
   display: flex;
   flex-direction: column;
@@ -597,6 +609,33 @@ main {
   margin: 22px 0 12px;
   color: var(--muted);
   font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 34px;
+}
+.tag {
+  border: 1px solid #2c5866;
+  color: var(--cyan);
+  border-radius: 999px;
+  padding: 0 7px;
+}
+.media-copy small.existing-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8fd8ea;
+}
+.media-copy small.existing-note.same {
+  color: #f3c77a;
+}
+.cleanup-confirm {
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+.cleanup-confirm .check-field {
+  margin-top: 10px;
 }
 .empty {
   padding: 55px 25px;
@@ -956,6 +995,16 @@ progress::-moz-progress-bar {
   }
   .task-actions {
     flex-direction: column;
+  }
+  .list-toolbar {
+    flex-wrap: wrap;
+  }
+  .search-input {
+    flex-basis: 100%;
+  }
+  .list-toolbar > select {
+    flex: 1;
+    max-width: none;
   }
 }
 @media (max-width: 760px) {

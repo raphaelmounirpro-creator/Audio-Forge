@@ -81,6 +81,7 @@ name = "audioforge"
 version = "0.1.0"
 dependencies = [
  "rusqlite",
+ "same-file",
  "serde",
  "serde_json",
  "sha2",
@@ -92,6 +93,7 @@ dependencies = [
  "tokio",
  "url",
  "uuid",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]

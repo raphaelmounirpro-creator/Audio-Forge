@@ -68,6 +68,7 @@ pub async fn run(
     let mut stderr_pending = Vec::new();
     let mut out_done = false;
     let mut err_done = false;
+    let mut diagnosis = None;
     let result: Result<()> = async {
         while !out_done || !err_done {
             tokio::select! {
@@ -82,14 +83,20 @@ pub async fn run(
                         }, None => out_done = true,
                     }
                 },
-                line = bounded_line(&mut stderr, &mut stderr_pending, 65536), if !err_done => { if line?.is_none() { err_done = true; } }
+                line = bounded_line(&mut stderr, &mut stderr_pending, 65536), if !err_done => {
+                    if let Some(line) = line? {
+                        diagnosis = classify_error(&line).or(diagnosis);
+                    } else {
+                        err_done = true;
+                    }
+                }
             }
         }
         tokio::select! {
             _ = cancel.changed() => Err(cancelled()),
             _ = &mut deadline => Err(AppError::new("PROCESS_TIMEOUT", "Le moteur n'a pas terminé à temps.")),
             status = child.wait() => {
-                if status?.success() { Ok(()) } else { Err(AppError::new("ENGINE_ERROR", "Le moteur n'a pas pu traiter ce média. Il peut être indisponible, restreint ou incompatible avec le format choisi.")) }
+                if status?.success() { Ok(()) } else { Err(diagnosis.unwrap_or_else(|| AppError::new("ENGINE_ERROR", "Le moteur n'a pas pu traiter ce média. Il peut être indisponible, restreint ou incompatible avec le format choisi."))) }
             }
         }
     }.await;
@@ -115,6 +122,36 @@ pub async fn run(
 }
 pub fn cancelled() -> AppError {
     AppError::new("DOWNLOAD_CANCELLED", "Téléchargement annulé.")
+}
+
+fn classify_error(line: &str) -> Option<AppError> {
+    let line = line.to_ascii_lowercase();
+    if line.contains("requested format is not available")
+        || line.contains("does not contain any stream")
+        || line.contains("matches no streams")
+    {
+        Some(AppError::new(
+            "FORMAT_UNAVAILABLE",
+            "Aucune piste ne correspond au format choisi. Sélectionnez un autre format.",
+        ))
+    } else if line.contains("no space left on device") || line.contains("not enough space") {
+        Some(AppError::new(
+            "DISK_FULL",
+            "Le disque manque d’espace. Libérez de la place ou changez de destination.",
+        ))
+    } else if line.contains("timed out") || line.contains("timeout") {
+        Some(AppError::new(
+            "PROCESS_TIMEOUT",
+            "La connexion a expiré. Vérifiez le réseau puis réessayez.",
+        ))
+    } else if line.contains("video unavailable") || line.contains("unsupported url") {
+        Some(AppError::new(
+            "MEDIA_UNAVAILABLE",
+            "Le moteur ne trouve pas ce média. Vérifiez que le lien est public et accessible.",
+        ))
+    } else {
+        None
+    }
 }
 
 async fn bounded_line(

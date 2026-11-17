@@ -4,7 +4,7 @@ La candidature SignPath Foundation a été envoyée et sa réception confirmée.
 
 ## Téléchargement
 
-Les futures versions seront disponibles sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur public n’est actuellement proposé. Le fichier local dans `releases/0.1.0/` est ignoré par Git : il ne constitue pas un téléchargement GitHub. Il embarque encore yt-dlp, FFmpeg et Deno et ne doit pas être téléversé.
+Les futures versions seront disponibles sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur public n’est actuellement proposé. Le fichier local dans `releases/0.1.0/` est ignoré par Git : il ne constitue pas un téléchargement GitHub. Depuis le 17 novembre 2026, c'est l'installateur reconstruit sans programme tiers (3 311 368 octets, SHA-256 `b4903362…`). Il reste non signé et ne doit pas être téléversé avant la résolution des points de STATUS.json. L'ancien installateur, qui embarquait yt-dlp, FFmpeg et Deno, n'est plus dans ce dossier.
 
 AudioForge propose une interface française Windows pour analyser des liens de médias autorisés, télécharger de l’audio ou de la vidéo, gérer une file d’attente et un historique local, et convertir l’audio avec FFmpeg. Il reste une version de développement ; les parcours réseau complets nécessitent encore des essais.
 

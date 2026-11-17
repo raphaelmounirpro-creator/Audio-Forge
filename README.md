@@ -4,7 +4,9 @@ Application Windows 10/11 x64 en français pour récupérer des contenus audio e
 
 ## Téléchargement
 
-Les versions publiques seront proposées sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur n’est encore disponible : la [préparation de la release 0.1.0](docs/distribution/README.md) détaille les points restants. L’ancien installateur local embarque encore yt-dlp, FFmpeg et Deno, et ne sera pas publié.
+[![Installateur Windows x64 — Disponibilité](https://img.shields.io/badge/Installateur_Windows_x64-Disponibilit%C3%A9-2563EB?style=for-the-badge)](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases)
+
+L’installateur NSIS x64 a été compilé. La [préparation de la release 0.1.0](docs/distribution/README.md) indique les vérifications qui restent avant sa publication sur GitHub Releases.
 
 ## But du projet
 
@@ -21,9 +23,11 @@ yt-dlp, FFmpeg et Deno ne sont pas inclus dans l'installateur. Au premier usage,
 | Analyse des liens | Récupération du titre, de la durée et des formats accessibles via yt-dlp. Sources initiales : YouTube, Vimeo, Wikimedia et Archive.org, selon leur compatibilité et la disponibilité des contenus. |
 | Téléchargement audio | Sorties MP3, M4A/AAC, Opus, FLAC, WAV ou flux original. Débits MP3 proposés : 128, 192, 256 et 320 kb/s. |
 | Téléchargement vidéo | Choix d'une résolution maximale et sorties MP4, MKV, WebM ou format original. Multiplexage des pistes audio et vidéo avec FFmpeg lorsque nécessaire. |
-| Playlists et lots | Analyse de plusieurs liens et sélection des éléments d'une playlist. Limites actuelles : 25 liens par lot et 200 éléments par analyse de playlist. |
-| File d'attente | Progression, états des tâches, annulation et nouvelle tentative. De 1 à 5 téléchargements simultanés configurables. |
-| Historique | Stockage SQLite local, recherche, filtres et ouverture des fichiers existants. Retirer une entrée ne supprime pas le fichier. |
+| Playlists et lots | Import TXT, analyse jusqu’à 25 liens par lot, sélection paginée et compteur par playlist. |
+| File d'attente | Progression, annulation, relance individuelle ou groupée. De 1 à 5 tâches simultanées configurables. |
+| Conversion locale | Sélection d’un fichier Windows et conversion audio ou MP4 compatible dans la file. |
+| Profils | Profils prêts à l’emploi et profils personnalisés conservés dans SQLite. |
+| Historique | Recherche, tri, doublons et ouverture des fichiers. Affiche l’auteur et la durée disponibles, la taille et l’état du fichier sur disque. |
 | Préférences | Dossier de destination, formats par défaut, débit MP3 et nombre de tâches simultanées. |
 | Interface française | Accueil, Téléchargements, Historique, Paramètres et À propos ; thème sombre et navigation au clavier. |
 
@@ -31,15 +35,14 @@ La conversion en FLAC ou MP3 320 kb/s n'améliore pas la qualité d'une source d
 
 ## État du développement
 
-La version de développement **0.1.0** a été compilée, installée et démarrée dans Windows Sandbox. Les conversions locales et l'intégrité des composants installés ont été vérifiées. L'utilisateur a également confirmé le fonctionnement d'AudioForge dans cet environnement.
+Un premier paquet de la version de développement **0.1.0** a démarré dans Windows Sandbox et créé sa base SQLite. L’installateur du lot actuel a été compilé. Son sélecteur de fichiers et le parcours complet de téléchargement dans l’application installée restent à vérifier.
 
 Les validations enregistrées comprennent :
 
-- 19 tests frontend ;
-- 14 tests Rust ;
-- un test d'intégration Rust couvrant cinq formats audio ;
-- six tests navigateur, dont la navigation au clavier et l'affichage agrandi ;
-- des tests des scripts de préparation et de lancement.
+- 31 tests frontend, 32 tests Rust et 30 tests de scripts.
+- 6 tests navigateur, dont la navigation au clavier et l’affichage agrandi.
+- 2 tests natifs de conversion, dont MP4 vers MP3 via la file et vérification de SQLite après réouverture.
+- 1 test réseau du moteur avec un fichier public Wikimedia.
 
 Les parcours complets sur chaque plateforme, la robustesse des téléchargements en conditions réelles et l'ensemble du cahier des charges 1.0 restent à valider. La liste des fonctionnalités ne constitue pas une garantie de compatibilité avec tous les contenus ou tous les sites.
 
@@ -47,7 +50,7 @@ Les parcours complets sur chaque plateforme, la robustesse des téléchargements
 
 - L'installateur de développement ne possède pas de signature d'éditeur reconnue. Smart App Control a bloqué son installation directe sur le PC de développement.
 - Windows Sandbox permet un usage isolé provisoire. Ses données sont temporaires : les fichiers à conserver doivent être copiés dans le dossier partagé avant fermeture.
-- Les miniatures, les pochettes, les métadonnées complètes, le nommage avancé et les playlists progressives restent à compléter.
+- Les miniatures, les pochettes, les métadonnées complètes et le nommage avancé restent à compléter.
 - Les protections réseau et les processus enfants nécessitent encore des vérifications avant une diffusion large.
 - Le téléchargement des composants à la demande est compilé, et l'installateur qui en dépend a été installé et démarré dans Windows Sandbox. Il reste à télécharger réellement les composants depuis l'application installée, puis à réaliser une conversion.
 - Aucun téléchargement public d'un installateur n'est annoncé dans cette présentation.

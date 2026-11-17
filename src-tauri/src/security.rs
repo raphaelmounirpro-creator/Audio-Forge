@@ -157,9 +157,90 @@ pub fn safe_child(root: &Path, path: &Path) -> Result<PathBuf> {
     Ok(canonical)
 }
 
+pub const MEDIA_EXTENSIONS: &[&str] = &[
+    "mp4", "m4a", "mov", "mkv", "webm", "mka", "mp3", "wav", "flac", "opus", "ogg", "aac",
+];
+
+pub fn local_file(path: &Path, extensions: &[&str]) -> Result<PathBuf> {
+    let invalid = || {
+        AppError::new(
+            "INVALID_PATH",
+            "Choisissez un fichier local accessible dans un format pris en charge.",
+        )
+    };
+    let parent = path.parent().and_then(Path::to_str).ok_or_else(invalid)?;
+    let root = destination(parent).map_err(|_| invalid())?;
+    let name = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(invalid)?;
+    if name.contains(':') || name.chars().any(char::is_control) {
+        return Err(invalid());
+    }
+    let path = root.join(name);
+    let metadata = std::fs::symlink_metadata(&path).map_err(|_| invalid())?;
+    #[cfg(windows)]
+    {
+        use std::os::windows::fs::MetadataExt;
+        if metadata.file_attributes() & 0x400 != 0 {
+            return Err(invalid());
+        }
+    }
+    if !metadata.is_file()
+        || !path
+            .extension()
+            .and_then(|value| value.to_str())
+            .is_some_and(|value| extensions.contains(&value.to_ascii_lowercase().as_str()))
+    {
+        return Err(invalid());
+    }
+    let verified = safe_child(&root, &path).map_err(|_| invalid())?;
+    if verified.parent() != Some(root.as_path()) {
+        return Err(invalid());
+    }
+    Ok(verified)
+}
+
+pub fn read_link_list(path: &Path) -> Result<String> {
+    use std::io::Read;
+    const MAX_SIZE: u64 = 128 * 1024;
+    let path = local_file(path, &["txt"])?;
+    let mut bytes = Vec::new();
+    std::fs::File::open(path)?
+        .take(MAX_SIZE + 1)
+        .read_to_end(&mut bytes)?;
+    if bytes.len() as u64 > MAX_SIZE {
+        return Err(AppError::new(
+            "INVALID_SETTINGS",
+            "La liste TXT dépasse 128 Kio.",
+        ));
+    }
+    let text = String::from_utf8(bytes)
+        .ok()
+        .filter(|text| !text.contains('\0'))
+        .ok_or_else(|| {
+            AppError::new(
+                "INVALID_SETTINGS",
+                "Enregistrez la liste TXT au format UTF-8.",
+            )
+        })?;
+    Ok(text.trim_start_matches('\u{feff}').to_owned())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn import_accepts_utf8_bom_and_refuses_oversize_and_binary() {
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("liens.txt");
+        std::fs::write(&path, "\u{feff}https://vimeo.com/1\r\n").unwrap();
+        assert_eq!(read_link_list(&path).unwrap(), "https://vimeo.com/1\r\n");
+        std::fs::write(&path, vec![b'x'; 128 * 1024 + 1]).unwrap();
+        assert_eq!(read_link_list(&path).unwrap_err().code, "INVALID_SETTINGS");
+        std::fs::write(&path, [0xff, 0]).unwrap();
+        assert_eq!(read_link_list(&path).unwrap_err().code, "INVALID_SETTINGS");
+    }
     #[test]
     fn urls_reject_injection_and_private_hosts() {
         for u in [

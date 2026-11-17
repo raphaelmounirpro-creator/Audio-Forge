@@ -11,6 +11,7 @@
     "tauri": "tauri",
     "desktop:dev": "node scripts/desktop.mjs dev",
     "desktop:build": "node scripts/desktop.mjs build",
+    "app:update": "node scripts/update-installed.mjs",
     "tools:verify": "node scripts/tools.mjs verify",
     "tools:fetch": "node scripts/tools.mjs fetch",
     "tools:pin": "node scripts/tools.mjs pin",

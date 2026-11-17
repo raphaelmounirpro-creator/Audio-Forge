@@ -1,5 +1,5 @@
 use crate::{
-    domain::{Settings, Status, Task},
+    domain::{Profile, Settings, Status, Task},
     error::{AppError, Result},
 };
 use rusqlite::{params, Connection, OptionalExtension};
@@ -12,12 +12,14 @@ impl Storage {
         conn.busy_timeout(std::time::Duration::from_secs(5))?;
         conn.execute_batch("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;")?;
         conn.execute_batch(include_str!("../migrations/001_initial.sql"))?;
+        conn.execute_batch(include_str!("../migrations/002_profiles.sql"))?;
         let store = Self(Mutex::new(conn));
         for mut task in store.tasks()? {
             if !task.status.terminal() && task.status != Status::Queued {
                 task.status = Status::Interrupted;
                 task.error =
                     Some("L'application s'est arrêtée avant la fin. Vous pouvez réessayer.".into());
+                task.error_code = Some("INTERRUPTED".into());
                 store.save_task(&task)?;
             }
         }
@@ -49,6 +51,42 @@ impl Storage {
             .lock()
             .map_err(AppError::internal)?
             .execute("DELETE FROM downloads WHERE id=?1", [id])?;
+        Ok(())
+    }
+    pub fn profiles(&self) -> Result<Vec<Profile>> {
+        let conn = self.0.lock().map_err(AppError::internal)?;
+        let mut statement =
+            conn.prepare("SELECT payload FROM profiles ORDER BY name COLLATE NOCASE, name")?;
+        let rows = statement.query_map([], |row| row.get::<_, String>(0))?;
+        rows.map(|row| Ok(serde_json::from_str(&row?)?)).collect()
+    }
+    pub fn save_profile(&self, profile: &Profile) -> Result<()> {
+        let conn = self.0.lock().map_err(AppError::internal)?;
+        let count: i64 = conn.query_row("SELECT count(*) FROM profiles", [], |row| row.get(0))?;
+        let name = profile.name.to_lowercase();
+        if count >= 50
+            && !conn.query_row(
+                "SELECT EXISTS(SELECT 1 FROM profiles WHERE name=?1)",
+                [&name],
+                |row| row.get::<_, bool>(0),
+            )?
+        {
+            return Err(AppError::new(
+                "INVALID_SETTINGS",
+                "Vous pouvez enregistrer jusqu’à 50 profils.",
+            ));
+        }
+        conn.execute(
+            "INSERT INTO profiles(name,payload) VALUES(?1,?2) ON CONFLICT(name) DO UPDATE SET payload=excluded.payload",
+            params![name, serde_json::to_string(profile)?],
+        )?;
+        Ok(())
+    }
+    pub fn remove_profile(&self, name: &str) -> Result<()> {
+        self.0
+            .lock()
+            .map_err(AppError::internal)?
+            .execute("DELETE FROM profiles WHERE name=?1", [name.to_lowercase()])?;
         Ok(())
     }
     pub fn settings(&self, default: Settings) -> Result<Settings> {
@@ -96,6 +134,10 @@ mod tests {
             path: None,
             error: None,
             created_at: 1,
+            media_key: None,
+            details: Default::default(),
+            local_source: None,
+            error_code: None,
         };
         {
             let store = Storage::open(&path).unwrap();

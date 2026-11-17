@@ -2,8 +2,13 @@ import { invoke, isTauri } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { open } from "@tauri-apps/plugin-dialog";
 import type {
+  Cleanup,
   DownloadRequest,
+  ExistingFile,
   Media,
+  MediaDetails,
+  OutputOptions,
+  Profile,
   Settings,
   Task,
   ToolInfo,
@@ -42,11 +47,33 @@ export const native = {
     listen<ToolProgress>("tools-progress", (event) => callback(event.payload)),
   saveSettings: (settings: Settings) =>
     call<void>("save_settings", { settings }),
-  analyze: (url: string) => call<Media>("analyze_media", { url }),
-  enqueue: (request: DownloadRequest) =>
-    call<Task>("enqueue_download", { request }),
+  analyze: (url: string, start?: number) =>
+    call<Media>("analyze_media", { url, start }),
+  /** `allowExisting`: the user confirmed saving again a file already on disk. */
+  enqueue: (
+    request: DownloadRequest,
+    allowExisting = false,
+    details?: MediaDetails,
+  ) => call<Task>("enqueue_download", { request, allowExisting, details }),
+  profiles: () => call<Profile[]>("get_profiles"),
+  saveProfile: (profile: Profile) =>
+    call<Profile[]>("save_profile", { profile }),
+  removeProfile: (name: string) => call<Profile[]>("remove_profile", { name }),
+  chooseLocalMedia: (output: OutputOptions) =>
+    call<Task | null>("choose_local_media", { output }),
+  importLinks: () => call<string | null>("import_link_list"),
+  fileSizes: (ids: string[]) =>
+    call<Record<string, number | null>>("get_file_sizes", { ids }),
+  existing: (urls: string[]) => call<ExistingFile[]>("find_existing", { urls }),
+  duplicates: () => call<string[]>("find_duplicates"),
+  removeDuplicates: (deleteFiles: boolean) =>
+    call<Cleanup>("remove_duplicates", { deleteFiles }),
   cancel: (id: string) => call<void>("cancel_download", { id }),
   retry: (id: string) => call<void>("retry_download", { id }),
+  retryFailed: (ids: string[]) =>
+    call<{ restarted: number; skipped: number }>("retry_failed_downloads", {
+      ids,
+    }),
   remove: (id: string) => call<void>("remove_download", { id }),
   open: (id: string, folder = false) =>
     call<void>("open_download", { id, folder }),

@@ -5,6 +5,7 @@ pub mod install;
 pub mod process;
 pub mod proxy;
 pub mod queue;
+pub mod recycle;
 pub mod security;
 pub mod storage;
 pub mod tools;
@@ -20,6 +21,7 @@ mod desktop {
     };
     use std::sync::{Arc, Mutex};
     use tauri::{Emitter, Manager, State};
+    use tauri_plugin_dialog::DialogExt;
     use tokio::sync::watch;
     type AppQueue = Arc<Queue>;
 
@@ -101,13 +103,117 @@ mod desktop {
             .map_err(AppError::internal)
     }
     #[tauri::command]
-    async fn analyze_media(queue: State<'_, AppQueue>, url: String) -> Result<Media> {
+    async fn analyze_media(
+        queue: State<'_, AppQueue>,
+        url: String,
+        start: Option<u32>,
+    ) -> Result<Media> {
         let (_tx, mut cancel) = tokio::sync::watch::channel(false);
-        crate::engine::analyze(&queue.tools, &url, &mut cancel).await
+        let media =
+            crate::engine::analyze(&queue.tools, &url, start.unwrap_or(1), &mut cancel).await?;
+        queue.remember_analysis(&media)?;
+        Ok(media)
     }
     #[tauri::command]
-    fn enqueue_download(queue: State<'_, AppQueue>, request: DownloadRequest) -> Result<Task> {
-        queue.enqueue(request)
+    fn enqueue_download(
+        queue: State<'_, AppQueue>,
+        request: DownloadRequest,
+        allow_existing: bool,
+        details: Option<MediaDetails>,
+    ) -> Result<Task> {
+        queue.enqueue_media(request, allow_existing, details.unwrap_or_default())
+    }
+    #[tauri::command]
+    fn get_profiles(queue: State<'_, AppQueue>) -> Result<Vec<Profile>> {
+        queue.profiles()
+    }
+    #[tauri::command]
+    fn save_profile(queue: State<'_, AppQueue>, profile: Profile) -> Result<Vec<Profile>> {
+        queue.save_profile(profile)
+    }
+    #[tauri::command]
+    fn remove_profile(queue: State<'_, AppQueue>, name: String) -> Result<Vec<Profile>> {
+        queue.remove_profile(&name)
+    }
+    #[tauri::command]
+    async fn choose_local_media(
+        app: tauri::AppHandle,
+        queue: State<'_, AppQueue>,
+        output: OutputOptions,
+    ) -> Result<Option<Task>> {
+        let queue = queue.inner().clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            let selection = app
+                .dialog()
+                .file()
+                .set_title("Choisir un fichier multimédia")
+                .add_filter("Fichiers multimédias", crate::security::MEDIA_EXTENSIONS)
+                .blocking_pick_file();
+            selection
+                .map(|path| {
+                    let path = path.into_path().map_err(AppError::internal)?;
+                    queue.enqueue_local(output, &path)
+                })
+                .transpose()
+        })
+        .await
+        .map_err(AppError::internal)?
+    }
+    #[tauri::command]
+    async fn import_link_list(app: tauri::AppHandle) -> Result<Option<String>> {
+        tauri::async_runtime::spawn_blocking(move || {
+            let selection = app
+                .dialog()
+                .file()
+                .set_title("Importer une liste de liens")
+                .add_filter("Liste de liens TXT", &["txt"])
+                .blocking_pick_file();
+            selection
+                .map(|path| {
+                    let path = path.into_path().map_err(AppError::internal)?;
+                    crate::security::read_link_list(&path)
+                })
+                .transpose()
+        })
+        .await
+        .map_err(AppError::internal)?
+    }
+    #[tauri::command]
+    async fn get_file_sizes(
+        queue: State<'_, AppQueue>,
+        ids: Vec<String>,
+    ) -> Result<std::collections::HashMap<String, Option<u64>>> {
+        let queue = queue.inner().clone();
+        tauri::async_runtime::spawn_blocking(move || queue.file_sizes(&ids))
+            .await
+            .map_err(AppError::internal)?
+    }
+    #[tauri::command]
+    async fn find_existing(
+        queue: State<'_, AppQueue>,
+        urls: Vec<String>,
+    ) -> Result<Vec<ExistingFile>> {
+        let queue = queue.inner().clone();
+        tauri::async_runtime::spawn_blocking(move || queue.existing(&urls))
+            .await
+            .map_err(AppError::internal)?
+    }
+    #[tauri::command]
+    async fn find_duplicates(queue: State<'_, AppQueue>) -> Result<Vec<String>> {
+        let queue = queue.inner().clone();
+        tauri::async_runtime::spawn_blocking(move || queue.duplicates())
+            .await
+            .map_err(AppError::internal)?
+    }
+    #[tauri::command]
+    async fn remove_duplicates(queue: State<'_, AppQueue>, delete_files: bool) -> Result<Cleanup> {
+        let queue = queue.inner().clone();
+        // Blocking: Windows may ask before a permanent deletion.
+        tauri::async_runtime::spawn_blocking(move || {
+            queue.remove_duplicates(delete_files, crate::recycle::recycle)
+        })
+        .await
+        .map_err(AppError::internal)?
     }
     #[tauri::command]
     fn cancel_download(queue: State<'_, AppQueue>, id: String) -> Result<()> {
@@ -116,6 +222,10 @@ mod desktop {
     #[tauri::command]
     fn retry_download(queue: State<'_, AppQueue>, id: String) -> Result<()> {
         queue.retry(&id)
+    }
+    #[tauri::command]
+    fn retry_failed_downloads(queue: State<'_, AppQueue>, ids: Vec<String>) -> Result<RetryReport> {
+        queue.retry_failed(&ids)
     }
     #[tauri::command]
     fn remove_download(queue: State<'_, AppQueue>, id: String) -> Result<()> {
@@ -145,6 +255,17 @@ mod desktop {
             .setup(|app| {
                 let data = app.path().app_local_data_dir()?;
                 std::fs::create_dir_all(&data)?;
+                #[cfg(windows)]
+                {
+                    use std::os::windows::fs::OpenOptionsExt;
+                    let lock = std::fs::OpenOptions::new()
+                        .write(true)
+                        .create(true)
+                        .truncate(false)
+                        .share_mode(0)
+                        .open(data.join("instance.lock"))?;
+                    app.manage(lock);
+                }
                 let destination = app.path().download_dir().unwrap_or(data.clone());
                 // Third-party components are downloaded on request into the
                 // user profile, never shipped in the installer.
@@ -183,8 +304,18 @@ mod desktop {
                 cancel_tools_install,
                 analyze_media,
                 enqueue_download,
+                get_profiles,
+                save_profile,
+                remove_profile,
+                choose_local_media,
+                import_link_list,
+                get_file_sizes,
+                find_existing,
+                find_duplicates,
+                remove_duplicates,
                 cancel_download,
                 retry_download,
+                retry_failed_downloads,
                 remove_download,
                 open_download
             ])

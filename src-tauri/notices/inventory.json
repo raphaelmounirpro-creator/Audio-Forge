@@ -4,7 +4,7 @@
   "inputs": {
     "LICENSE": "cfa6a5ef7ad6909290bc7a3b8adf95b1b984c7e751e5c04fec087de96826b8a3",
     "package-lock.json": "237902084c066c69f898bdbd77d03f8fe68777043ac9df7f98f9b32e47da4111",
-    "src-tauri/Cargo.lock": "8f3192a87d1691dc228a44be84fe171d11d2c9cf533e6fd2d831d0e7b5cf37a0",
+    "src-tauri/Cargo.lock": "6dbbe1a27afe027754e268f0fd5ea505af52650971ddf0e01559626416c692c2",
     "src-tauri/notices/supplements.lock.json": "6432d889c5ebb2dbf7550bb6ba5fde879cd5077671425c2690c1953b1c2f299d"
   },
   "notices": {

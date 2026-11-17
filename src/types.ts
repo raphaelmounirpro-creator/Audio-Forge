@@ -26,6 +26,16 @@ export interface DownloadRequest {
   destination: string;
   metadata: boolean;
 }
+export type OutputOptions = Omit<DownloadRequest, "url" | "title">;
+export interface Profile {
+  name: string;
+  output: OutputOptions;
+}
+export interface MediaDetails {
+  creator?: string | null;
+  duration?: number | null;
+  playlist?: { id: string; title: string };
+}
 export interface Task {
   id: string;
   request: DownloadRequest;
@@ -36,6 +46,20 @@ export interface Task {
   path: string | null;
   error: string | null;
   createdAt: number;
+  details?: MediaDetails;
+  localSource?: string | null;
+  errorCode?: string | null;
+}
+/** Completed download of an analysed link whose file is still on disk. */
+export interface ExistingFile {
+  url: string;
+  request: DownloadRequest;
+  path: string;
+}
+export interface Cleanup {
+  removed: number;
+  recycled: number;
+  failed: number;
 }
 export interface MediaFormat {
   id: string;
@@ -49,6 +73,8 @@ export interface PlaylistEntry {
   url: string;
   title: string;
   duration: number | null;
+  creator?: string | null;
+  mediaKey?: string | null;
 }
 export interface Media {
   id: string;
@@ -59,6 +85,8 @@ export interface Media {
   formats: MediaFormat[];
   entries: PlaylistEntry[];
   isPlaylist: boolean;
+  mediaKey?: string | null;
+  nextStart?: number | null;
 }
 export interface ToolInfo {
   name: string;
