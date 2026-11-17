@@ -2,14 +2,14 @@
   "status": "ready-for-user-review",
   "published": false,
   "licenseApplied": true,
-  "files": 102,
-  "totalBytes": 841098,
+  "files": 117,
+  "totalBytes": 3258817,
   "findings": [],
   "manifest": [
     {
       "file": ".gitattributes",
-      "bytes": 124,
-      "sha256": "6994f156c56af6ed5b0ba9349ffd07d24bd579028f6e77fdab206674909e7d01"
+      "bytes": 237,
+      "sha256": "b9a16ed46da5cc105872e272ee1f786a619e0252ec66f22d6995aed1daec84e3"
     },
     {
       "file": ".github/actions.lock.json",
@@ -38,13 +38,13 @@
     },
     {
       "file": "CODE_SIGNING_POLICY.md",
-      "bytes": 2108,
-      "sha256": "9efe7edf55fbce77b37f74ad6b5cc11bfe344e6f1be857105330e253248b5e5f"
+      "bytes": 2335,
+      "sha256": "6e5b74c3680d18587df27633ce9dfd7ed30142a0d99d6f3cce149c25a7353cab"
     },
     {
       "file": "docs/distribution/README.md",
-      "bytes": 3330,
-      "sha256": "b8436397f132c7754fe795bafc48a6975e9088212a7fc12a2ef275d1b51c75eb"
+      "bytes": 2859,
+      "sha256": "2ead4d4873956d34b239b96f4f2c408b2be91872cd10eadc093cb6a17aa0a7c0"
     },
     {
       "file": "docs/distribution/RELEASE-0.1.0.md",
@@ -53,18 +53,18 @@
     },
     {
       "file": "docs/distribution/SOURCE-REQUESTS.md",
-      "bytes": 3085,
-      "sha256": "fc02be31d5e533b2ef96de3c6fae630201d581f4a357af68310ddeba9c340a59"
+      "bytes": 3211,
+      "sha256": "e88c0d74b492297f1c9b7ab017e75855db5af7938cff63cb8c2d4ca3419c520d"
     },
     {
       "file": "docs/distribution/STATUS.json",
-      "bytes": 1229,
-      "sha256": "26605c9d43e581f7ab8eb636c4eb614992642b07e979e6025425b89e299a45d0"
+      "bytes": 1520,
+      "sha256": "ad6991b2960ff63b03a01d3fd8d1c3e5e8991b87d9d358a81cb8f9e45d1e28be"
     },
     {
       "file": "docs/distribution/VALIDATION.md",
-      "bytes": 2127,
-      "sha256": "5e0f70236e1c26a4e8de5d0f32bf858df7c31632706327243f202220612ad114"
+      "bytes": 5618,
+      "sha256": "5df62800b56fbd717f4c46870b1109ddddf81b9028416385554245aaf2093958"
     },
     {
       "file": "docs/signing/application.xml",
@@ -73,8 +73,8 @@
     },
     {
       "file": "docs/signing/CANDIDATURE.md",
-      "bytes": 2833,
-      "sha256": "4a69a22e9b269ff9952603bffe4e14c95ba8b4ab2c10bb432caf329e0f207f92"
+      "bytes": 3073,
+      "sha256": "ebcb70169bcc1e887549fbe057797d21cf016b5f28e5ae50a6782e7469a12ca1"
     },
     {
       "file": "docs/signing/GPL-3.0-or-later.proposed.txt",
@@ -93,13 +93,13 @@
     },
     {
       "file": "docs/signing/PREPARATION.md",
-      "bytes": 4042,
-      "sha256": "4b4868a755bb82a7b08bea42d46e824874b60f28ae7043c94eb4cfddc782d145"
+      "bytes": 4063,
+      "sha256": "abcf081424d511bf26ddc60b1dcc01d3e3b20abb2039e8e8c10353546311977d"
     },
     {
       "file": "docs/signing/VALIDATION.md",
-      "bytes": 3621,
-      "sha256": "dc581647d119e41838628211c0974b58f4461fc37bab149366ad9732f18931da"
+      "bytes": 3880,
+      "sha256": "28a8f9b2b8b08381fd8660bf219351465d6db4ba182e67323c9e10b468a8e254"
     },
     {
       "file": "index.html",
@@ -118,8 +118,8 @@
     },
     {
       "file": "package.json",
-      "bytes": 2252,
-      "sha256": "a4ddea5c608449c1e8b6f0818ff299114095d7ad38a32a00f1d14f1c950700ef"
+      "bytes": 2320,
+      "sha256": "3799d110d82bde2bc0ac01442aadba0fb37e5da5f219496f6762835dc2daee02"
     },
     {
       "file": "playwright.config.ts",
@@ -128,23 +128,33 @@
     },
     {
       "file": "PRIVACY.md",
-      "bytes": 2180,
-      "sha256": "d0af6f053517af91a72a19aefc2e55fcf202bcfe04c1af7f5e24ea0b5f7049f6"
+      "bytes": 2467,
+      "sha256": "f5fe5097e471306bfec1e0a3efa0b4246a9f759840806330d70b55b91fed8770"
     },
     {
       "file": "README.md",
-      "bytes": 6883,
-      "sha256": "1e91ee83338401af4e374de9a7fcec5c6fd7d5667ab53b3e13403f6211deafeb"
+      "bytes": 7505,
+      "sha256": "98672f03f8ccdba41728b1219fda9c6f10365b61a8022493004cbf88bc95fe94"
+    },
+    {
+      "file": "scripts/bundle-policy.mjs",
+      "bytes": 602,
+      "sha256": "db1d140fe05f8ab5d1e6aa207d845db6cedd3aa30503e6f7e59a1de9cba39bd2"
     },
     {
       "file": "scripts/check-distribution.mjs",
-      "bytes": 715,
-      "sha256": "65cf2369531dd80e5a3e41036cf55f96d7afbe37783d0786271b99cef0b741a2"
+      "bytes": 1101,
+      "sha256": "e8cb4dde443a67cd9c08561efbb5ff3b2c5becbf66ac9d35b49b23fb11246b7b"
     },
     {
       "file": "scripts/code-signature.mjs",
       "bytes": 629,
       "sha256": "6dae4671e47a36d23b8aee71b3f8ff3deaeed45aa2dddb37a2aa32e8355f506c"
+    },
+    {
+      "file": "scripts/dependency-notices.mjs",
+      "bytes": 17128,
+      "sha256": "0535b9da191880289512f6cac7b1f863a010e1b04a7112aa4a2e22c343b354bb"
     },
     {
       "file": "scripts/desktop-environment.mjs",
@@ -188,13 +198,13 @@
     },
     {
       "file": "scripts/prepare-sandbox.mjs",
-      "bytes": 3526,
-      "sha256": "39300e01f3fac883cb514542ea7d5f050a520f0377265db373317e662f6072d4"
+      "bytes": 3539,
+      "sha256": "75ee598aa9f3e1e8f74d3f47bba0ef0c9436a44519908e4a2e5383cfbe18b31f"
     },
     {
       "file": "scripts/prepare-signpath-candidate.mjs",
-      "bytes": 4432,
-      "sha256": "3e77ff104cbd8c755273329fd7d0e5d13d26abb77029ae3130d3367e02509a39"
+      "bytes": 5062,
+      "sha256": "53bea521e7ca31fda8d974cb6e2e7fc01745ab8c180a4f8db1766eb8bd681713"
     },
     {
       "file": "scripts/sandbox-build.mjs",
@@ -208,8 +218,8 @@
     },
     {
       "file": "scripts/sandbox-install-smoke.mjs",
-      "bytes": 3328,
-      "sha256": "b49a0d03713218e420c33282e9c7f30846b989349f46838f9a35538c630adfa5"
+      "bytes": 3853,
+      "sha256": "e46509f6f7de69bb83b13c747221287894b96c9db5f8c4bd815e375875a7af3a"
     },
     {
       "file": "scripts/sandbox-status.mjs",
@@ -298,8 +308,8 @@
     },
     {
       "file": "src-tauri/binaries/sources.lock.json",
-      "bytes": 1120,
-      "sha256": "1eb9c6eca8769d1c2902a75dcdfaedde01920907d6496daf5d304ffff5b5821a"
+      "bytes": 1244,
+      "sha256": "c2a5a64e5e4bc295a5671bea302b4b588f36c66b21e59214dbb53b5b549f0a6b"
     },
     {
       "file": "src-tauri/binaries/tool-lock.json",
@@ -352,6 +362,56 @@
       "sha256": "bfd048d7e03eb48f8494a1d5147dbc80dc6297526d37bb7c16968ca5fea00321"
     },
     {
+      "file": "src-tauri/notices/inventory.json",
+      "bytes": 84238,
+      "sha256": "8be9c3636270fb5f8699f2985d3982c00ca9c9cb1183582446c3d0c8cf07a873"
+    },
+    {
+      "file": "src-tauri/notices/supplements.lock.json",
+      "bytes": 3413,
+      "sha256": "6432d889c5ebb2dbf7550bb6ba5fde879cd5077671425c2690c1953b1c2f299d"
+    },
+    {
+      "file": "src-tauri/notices/supplements/alloc-stdlib-0.3.0/LICENSE",
+      "bytes": 1483,
+      "sha256": "c0c56f26d9c051cac4d200c34c84e7ae9aaa853e01a982a1df08b09931e518ae"
+    },
+    {
+      "file": "src-tauri/notices/supplements/rust-std-1.98.1/COPYRIGHT-library.html",
+      "bytes": 1512520,
+      "sha256": "68129500b616d5838629e68f55ff3aed5e096dacf60ce9eb41bbe599a563afa6"
+    },
+    {
+      "file": "src-tauri/notices/supplements/selectors-0.38.0/LICENSE-MPL-2.0",
+      "bytes": 16726,
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85"
+    },
+    {
+      "file": "src-tauri/notices/supplements/webview2-com-0.39.1/LICENSE",
+      "bytes": 1067,
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "file": "src-tauri/notices/supplements/webview2-com-sys-0.39.1/LICENSE",
+      "bytes": 1067,
+      "sha256": "0dcf41516e608bbcb6cdc5229feb7b86fe4a643b85e7df251133c93408fdac73"
+    },
+    {
+      "file": "src-tauri/notices/supplements/webview2-com-sys-0.39.1/WebView2-SDK-LICENSE.txt",
+      "bytes": 1487,
+      "sha256": "0af8f1b807512aae39c2ac1aa4d0cae65cabecb6fd554b8439a5162a0d6eca55"
+    },
+    {
+      "file": "src-tauri/notices/supplements/webview2-com-sys-0.39.1/WebView2-SDK-NOTICE.txt",
+      "bytes": 3894,
+      "sha256": "106423785c5b7eba0a8e61d1837f2132e9c828e20ad530f565d981c1df60dd90"
+    },
+    {
+      "file": "src-tauri/notices/THIRD_PARTY_NOTICES.txt",
+      "bytes": 723859,
+      "sha256": "833566a0bfe1ef93cf527ae615ca3b6d7a8f42bd141747a037e8e4f8e1502fc3"
+    },
+    {
       "file": "src-tauri/src/domain.rs",
       "bytes": 5450,
       "sha256": "7e1eaa2c59c15df879d1a234b3622e072a8400cf847224aace3331a674c9d67e"
@@ -367,9 +427,14 @@
       "sha256": "431751cbd02c425e9d13af0655472448ff860f8a5bea352735db8c6e3d6d3181"
     },
     {
+      "file": "src-tauri/src/install.rs",
+      "bytes": 20195,
+      "sha256": "a4608cac4a48b19c197647168395b63b6039382be1ea59c43548d2d29bf648c8"
+    },
+    {
       "file": "src-tauri/src/lib.rs",
-      "bytes": 4638,
-      "sha256": "177559df744d1d12d8a76feb302a84b3c80594e599e3976243b98f0ac9b4a5b1"
+      "bytes": 6713,
+      "sha256": "fca51ffb088ff874134eadb326f5851035a36f122758727cca13abb3e390d719"
     },
     {
       "file": "src-tauri/src/main.rs",
@@ -403,13 +468,13 @@
     },
     {
       "file": "src-tauri/src/tools.rs",
-      "bytes": 3313,
-      "sha256": "bbffd9845c83d286099517b3c0d080071dce3a256453c03100ee1fb812c41bf9"
+      "bytes": 4133,
+      "sha256": "9295ed3ac682dc6a57a090e1a86021d5e2a44cc23fd497f6244fcf771218bf77"
     },
     {
       "file": "src-tauri/tauri.conf.json",
-      "bytes": 1603,
-      "sha256": "eb437db14b09ddcc7617dc5a30a64498ac7343b8b2b7751558f76bed114c5396"
+      "bytes": 1579,
+      "sha256": "d4d46e42c6138de40a25abc9fba70be40ec4b22dfdada5cbfe6fc61179b22e62"
     },
     {
       "file": "src-tauri/tests/native_media.rs",
@@ -418,8 +483,8 @@
     },
     {
       "file": "src/App.desktop.test.tsx",
-      "bytes": 6149,
-      "sha256": "6077d617852a0564183edc53ec6a90c028b91c81f395c24fcc80cd5842111f4a"
+      "bytes": 10221,
+      "sha256": "46c29ef882e06b4d44af54305bc1a0309b1775533a79f556f70547cfbb32b162"
     },
     {
       "file": "src/App.test.tsx",
@@ -428,8 +493,8 @@
     },
     {
       "file": "src/App.tsx",
-      "bytes": 37300,
-      "sha256": "d6db2bb8c85adf966013fb10ee8b96f378ee99adf860c48dfaae024e55c78111"
+      "bytes": 42296,
+      "sha256": "77cdddc4ead12a3fcc08bad9a4f87139b6bee7fc0eb3d5aa4169c765f46e089c"
     },
     {
       "file": "src/main.tsx",
@@ -438,13 +503,13 @@
     },
     {
       "file": "src/services/native.ts",
-      "bytes": 2056,
-      "sha256": "09295e30c544ac0ed3d289160d50ec52127c8d1fde4be3d4354dcad95b89bcbf"
+      "bytes": 2414,
+      "sha256": "7334629ddb61d68fbaa78881e4c4773023ab6116c74cf97423eaf207e3bc1a1a"
     },
     {
       "file": "src/styles.css",
-      "bytes": 17068,
-      "sha256": "7a3edf4384d93b9310cf5c6962daa13155787557fabe9ea4af5a2602234fd484"
+      "bytes": 18043,
+      "sha256": "2a62923b4a8fdb1b7f80b7105b32aa9cffd7476446aa7c4118a009f4caff0204"
     },
     {
       "file": "src/test-setup.ts",
@@ -453,8 +518,8 @@
     },
     {
       "file": "src/types.ts",
-      "bytes": 1341,
-      "sha256": "800934e8d0547d1653db616868f2afc0d2ab341dafb4bdd7f9d56e4bd51e17ce"
+      "bytes": 1718,
+      "sha256": "83abc386549aa402c3dc07b7f4137751556c81e4905e110aca3df079dbbd9168"
     },
     {
       "file": "src/utils.test.ts",
@@ -463,13 +528,23 @@
     },
     {
       "file": "src/utils.ts",
-      "bytes": 1676,
-      "sha256": "6435abc315ac068d29a9c6d6fc5b8ee8e9fac15659cb2b3c4ebae11d9f6df1ea"
+      "bytes": 1802,
+      "sha256": "27901a04c17de5120cb896f18f3c37ef6c1e0e374391a7ebdf5df077bc95683d"
+    },
+    {
+      "file": "tests/scripts/bundle-policy.test.mjs",
+      "bytes": 1062,
+      "sha256": "a1553b1bbe52dbee085f976a0736dd90a5ddb58631e44da5d7d8d2ed888221fa"
     },
     {
       "file": "tests/scripts/code-signature.test.mjs",
       "bytes": 1102,
       "sha256": "dbea58a8818001ed63abac33226c0e2893df253aeb266b41d9b1164410c737b3"
+    },
+    {
+      "file": "tests/scripts/dependency-notices.test.mjs",
+      "bytes": 7966,
+      "sha256": "693ff81e8c18c9c8362b7917547b380a9ce9cb21218524a8b5c9191fb6680ea7"
     },
     {
       "file": "tests/scripts/desktop-environment.test.mjs",
@@ -503,8 +578,8 @@
     },
     {
       "file": "THIRD_PARTY_LICENSES.md",
-      "bytes": 3900,
-      "sha256": "417b635228d53c036da387f6f0c9b50227c86d761005b8f6162f487a5d60d654"
+      "bytes": 4185,
+      "sha256": "c377c96aaa32f695d9621d6e2d769abd4ba1767956fbb13c5d97cbcc8734bd1a"
     },
     {
       "file": "tsconfig.json",

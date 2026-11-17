@@ -20,6 +20,7 @@ const selections = [
   "src-tauri/binaries/tool-lock.json",
   "src-tauri/binaries/notices.lock.json",
   "src-tauri/binaries/licenses",
+  "src-tauri/notices",
   "scripts",
   "tests",
   "assets",
@@ -64,6 +65,22 @@ const upstreamNoticeHashes = new Map(
     r.sha256,
   ]),
 );
+// Generated dependency notices reproduce upstream texts verbatim: same
+// exception, only while their bytes match the inventory and supplement lock.
+const dependencyInventory = JSON.parse(
+  await readFile(resolve("src-tauri/notices/inventory.json"), "utf8"),
+);
+upstreamNoticeHashes.set(
+  "src-tauri/notices/THIRD_PARTY_NOTICES.txt",
+  dependencyInventory.notices.sha256,
+);
+for (const r of JSON.parse(
+  await readFile(resolve("src-tauri/notices/supplements.lock.json"), "utf8"),
+))
+  upstreamNoticeHashes.set(
+    `src-tauri/notices/supplements/${r.package}-${r.version}/${r.file}`,
+    r.sha256,
+  );
 const patterns = [
   ["access-token", /(?:gh[pousr]_|github_pat_)[a-zA-Z0-9_]{20,}/],
   ["private-key", /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],

@@ -1,33 +1,30 @@
 # Composants et licences — inventaire provisoire
 
-**L'audit de redistribution des binaires est incomplet et aucune release publique n'a été faite.** Le code propre d'AudioForge est placé sous licence MIT, sur décision de son titulaire. Cela ne modifie pas les licences et obligations des composants tiers, notamment GPLv3 pour le build FFmpeg utilisé.
+**Aucune release publique n'a été faite.** Le code propre d'AudioForge est placé sous licence MIT, sur décision de son titulaire. Cela ne modifie pas les licences des composants tiers.
 
-## Composants natifs récupérés
+## Composants téléchargés à la demande (non redistribués)
 
-Versions et archives exactes : `src-tauri/binaries/sources.lock.json`. Empreintes des exécutables : `src-tauri/binaries/tool-lock.json`. FFmpeg utilise maintenant une URL nommée 9.0.2 et une empreinte publiée par le distributeur.
+L'installateur ne contient ni yt-dlp, ni FFmpeg/ffprobe, ni Deno, et `npm run release:check` refuse toute configuration qui les y ajouterait. À la demande de l'utilisateur, l'application les télécharge depuis leurs distributeurs officiels, puis vérifie les SHA-256 compilés dans le programme (`src-tauri/binaries/sources.lock.json` et `tool-lock.json`). Les obligations de redistribution de ces programmes (notices, sources correspondantes) incombent à ces distributeurs et ne s'appliquent pas à l'installateur d'AudioForge. Ce schéma reste à confirmer par un avis juridique si nécessaire.
 
-| Composant | Source retenue | État des obligations |
+| Composant | Distributeur | Licence |
 | --- | --- | --- |
-| yt-dlp 2026.10.26, exécutable Windows autonome | [Release](https://github.com/yt-dlp/yt-dlp/releases/tag/2026.10.26) | Le binaire autonome combiné relève de **GPLv3+**, selon la [documentation officielle](https://github.com/yt-dlp/yt-dlp/tree/2026.10.26#licensing). Les textes exacts `LICENSE` et `THIRD_PARTY_LICENSES.txt` sont inclus dans `licenses/yt-dlp-yt-dlp/`, avec commit et SHA-256 dans `notices.lock.json`. Sources exactes des dépendances et recette complète encore à inventorier. |
-| FFmpeg/ffprobe 9.0.2 Essentials Gyan | [Distributeur](https://www.gyan.dev/ffmpeg/builds/) référencé par [FFmpeg](https://www.ffmpeg.org/download.html) | Build **GPLv3**, confirmé par `--enable-gpl --enable-version3`. Textes `LICENSE` et `COPYING.GPLv3` dans `licenses/GyanD-codexffmpeg/`. Commit moteur identifié : `946fcce07b`. Versions, sources et scripts des bibliothèques statiques encore à obtenir : le commit moteur seul est insuffisant. Les notices BtbN obsolètes ont été retirées. |
-| Deno v2.9.8 | [Release](https://github.com/denoland/deno/releases/tag/v2.9.8) | Le texte MIT exact est inclus dans `licenses/denoland-deno/LICENSE.md`, avec commit et SHA-256 dans `notices.lock.json`. L’inventaire et les notices des dépendances du binaire complet restent à terminer. |
+| yt-dlp 2026.10.26, exécutable Windows autonome | [GitHub yt-dlp](https://github.com/yt-dlp/yt-dlp/releases/tag/2026.10.26) | **GPLv3+** pour le binaire autonome, selon la [documentation officielle](https://github.com/yt-dlp/yt-dlp/tree/2026.10.26#licensing) |
+| FFmpeg/ffprobe 9.0.2 Essentials | [gyan.dev](https://www.gyan.dev/ffmpeg/builds/), référencé par [FFmpeg](https://www.ffmpeg.org/download.html) | **GPLv3** (`--enable-gpl --enable-version3`) |
+| Deno v2.9.8 | [GitHub Deno](https://github.com/denoland/deno/releases/tag/v2.9.8) | MIT pour Deno ; dépendances sous leurs propres licences |
 
-Les fichiers `SOURCE.txt` indiquent la provenance et l'empreinte des archives ; **ils ne remplacent ni les textes de licence ni les sources correspondantes exigibles**.
+Les textes de licence amont restent conservés dans `src-tauri/binaries/licenses/` pour référence, verrouillés par `notices.lock.json`. Ils ne sont plus copiés dans l'installateur.
 
 ## Dépendances applicatives
 
-`package-lock.json` et `src-tauri/Cargo.lock` verrouillent les versions transitives. L'inventaire final doit inclure les dépendances réellement embarquées, pas uniquement les bibliothèques ci-dessous.
+`npm run notices:deps` génère [src-tauri/notices/THIRD_PARTY_NOTICES.txt](src-tauri/notices/THIRD_PARTY_NOTICES.txt), installé avec l'application. Ce fichier reproduit les licences des composants compilés dans `audioforge.exe` ou intégrés à son interface. L'[inventaire](src-tauri/notices/inventory.json) indique pour chacun la version, la licence déclarée et l'empreinte de chaque texte. `npm run release:check` refuse des notices qui ne correspondent plus à `package-lock.json`, `src-tauri/Cargo.lock` ou aux compléments verrouillés.
 
-- React / React DOM, Vite, TypeScript et Tailwind CSS : consulter les fichiers LICENSE des versions installées.
-- Tauri, ses plugins et Rust : consulter les licences de chaque crate verrouillé.
-- Lucide React : conserver sa licence et ses mentions.
-- Inter : police distribuée localement par `@fontsource/inter`, conserver sa licence SIL Open Font License fournie par le paquet.
-- SQLite et sa liaison Rust : distinguer la licence de SQLite de celle de rusqlite et de ses dépendances.
-- fflate : utilitaire de préparation des archives, dépendance de développement.
-- Vitest, Testing Library, Playwright, jsdom et Prettier : outils de développement, non requis chez l'utilisateur final.
-- WebView2 : composant Microsoft soumis à ses propres conditions d'installation/redistribution ; le bootstrapper n'est pas assimilé à une bibliothèque sous licence open source du projet.
+- **Interface :** 7 paquets npm de production (React, React DOM, scheduler, Lucide React, police Inter sous SIL OFL 1.1, API et plugin de dialogue Tauri). S'y ajoutent Vite et Tailwind CSS, dont le code se retrouve dans le bundle.
+- **Programme :** 190 crates liées pour `x86_64-pc-windows-msvc`, dont SQLite intégré par rusqlite. Les dépendances de test et de compilation et les macros procédurales ne sont pas intégrées au programme : elles sont exclues. Les sources exactes des quatre crates MPL-2.0 (cssparser, selectors, dtoa-short, option-ext) sont disponibles sur crates.io à l'adresse indiquée.
+- **Compléments verrouillés** dans [supplements.lock.json](src-tauri/notices/supplements.lock.json) : textes amont absents de quatre paquets crates.io ; licence et notices du SDK Microsoft WebView2 1.0.3800.47, dont le chargeur statique est lié au programme (bibliothèque vérifiée identique à celle du SDK) ; notices de la bibliothèque standard Rust 1.98.1.
+- **Runtime C MSVC :** lié statiquement (réglage par défaut de Tauri). Ses conditions de redistribution relèvent de la licence Microsoft des outils de compilation et restent à confirmer.
+- **WebView2 :** le runtime Microsoft n'est pas intégré. L'installateur télécharge son programme d'amorçage si nécessaire, selon les conditions Microsoft.
 
-Avant distribution : produire l'inventaire détaillé, copier les notices exactes, relever la configuration FFmpeg, fournir ou proposer les sources lorsque nécessaire, puis fixer la licence du projet et vérifier l'installateur. Aucune dépendance payante n'est imposée.
+Les outils de développement et de test (Vitest, Testing Library, Playwright, jsdom, Prettier, TypeScript, fflate) ne sont pas distribués. Aucune dépendance payante n'est imposée.
 
 ## Blocage de publication
 

@@ -19,6 +19,8 @@ export const duration = (seconds: number | null) => {
     ? `${Math.floor(s / 3600)} h ${Math.floor((s % 3600) / 60)} min`
     : `${Math.floor(s / 60)} min ${String(s % 60).padStart(2, "0")} s`;
 };
+export const size = (bytes: number) =>
+  `${(bytes / 1024 / 1024).toLocaleString("fr-FR", { maximumFractionDigits: 1 })} Mo`;
 export function splitUrls(value: string): string[] {
   return [
     ...new Set(

@@ -1,12 +1,23 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Media, Settings, Task } from "./types";
+import type {
+  Media,
+  Settings,
+  Task,
+  ToolInfo,
+  ToolProgress,
+  ToolSource,
+} from "./types";
 
 const mock = vi.hoisted(() => ({
   tasks: vi.fn(),
   settings: vi.fn(),
   tools: vi.fn(),
+  toolSources: vi.fn(),
+  installTools: vi.fn(),
+  cancelToolsInstall: vi.fn(),
+  subscribeTools: vi.fn(),
   subscribe: vi.fn(),
   analyze: vi.fn(),
   enqueue: vi.fn(),
@@ -65,11 +76,41 @@ function task(status: Task["status"]): Task {
     createdAt: 1700000000,
   };
 }
+const sources: ToolSource[] = [
+  {
+    repository: "yt-dlp/yt-dlp",
+    version: "2026.10.26",
+    url: "https://github.com/yt-dlp/yt-dlp/releases/download/2026.10.26/yt-dlp.exe",
+    sha256: "a".repeat(64),
+    size: 23575744,
+    license: "GPL-3.0-or-later",
+    files: ["yt-dlp.exe"],
+  },
+  {
+    repository: "GyanD/codexffmpeg",
+    version: "9.0.2",
+    url: "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.2-essentials_build.zip",
+    sha256: "b".repeat(64),
+    size: 114768076,
+    license: "GPL-3.0-or-later",
+    files: ["ffmpeg.exe", "ffprobe.exe"],
+  },
+];
+const tool = (name: string, ready: boolean): ToolInfo => ({
+  name,
+  version: "1",
+  ready,
+  detail: ready ? "Intégrité SHA-256 vérifiée" : "Non installé",
+});
+const setupPanel = () =>
+  screen.findByRole("region", { name: "Installer les composants multimédias" });
 beforeEach(() => {
   vi.resetAllMocks();
   mock.tasks.mockResolvedValue([]);
   mock.settings.mockResolvedValue(settings);
   mock.tools.mockResolvedValue([]);
+  mock.toolSources.mockResolvedValue(sources);
+  mock.subscribeTools.mockResolvedValue(() => {});
   mock.subscribe.mockResolvedValue(() => {});
   mock.analyze.mockResolvedValue(media);
   mock.enqueue.mockResolvedValue(task("queued"));
@@ -162,6 +203,87 @@ describe("parcours natifs avec IPC simulé", () => {
     expect(screen.getByText(/Le fichier sera conservé/)).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Retirer" }));
     await waitFor(() => expect(mock.remove).toHaveBeenCalledWith("one"));
+  });
+  it("ne télécharge les composants qu’après accord explicite et suit la progression", async () => {
+    mock.tools.mockResolvedValue([
+      tool("yt-dlp", false),
+      tool("ffmpeg", false),
+    ]);
+    let emit: (step: ToolProgress) => void = () => {};
+    mock.subscribeTools.mockImplementation(
+      async (callback: (step: ToolProgress) => void) => {
+        emit = callback;
+        return () => {};
+      },
+    );
+    let finish: (list: ToolInfo[]) => void = () => {};
+    mock.installTools.mockReturnValue(
+      new Promise<ToolInfo[]>((resolve) => {
+        finish = resolve;
+      }),
+    );
+    const user = userEvent.setup();
+    render(<App />);
+    const panel = await setupPanel();
+    expect(mock.installTools).not.toHaveBeenCalled();
+    expect(panel).toHaveTextContent("www.gyan.dev");
+    expect(panel).toHaveTextContent("109,5 Mo");
+    expect(panel).toHaveTextContent("131,9 Mo au total");
+    await user.click(
+      within(panel).getByRole("button", { name: "Télécharger et vérifier" }),
+    );
+    expect(mock.installTools).toHaveBeenCalledTimes(1);
+    expect(
+      within(panel).getByRole("button", { name: "Installation en cours…" }),
+    ).toBeDisabled();
+    act(() =>
+      emit({
+        repository: "GyanD/codexffmpeg",
+        stage: "download",
+        received: 57384038,
+        total: 114768076,
+      }),
+    );
+    expect(within(panel).getByText("Téléchargement 50 %")).toBeVisible();
+    await act(async () => finish([tool("yt-dlp", true), tool("ffmpeg", true)]));
+    expect(await screen.findByRole("status")).toHaveTextContent(
+      "Composants installés et vérifiés.",
+    );
+    expect(
+      screen.queryByRole("region", {
+        name: "Installer les composants multimédias",
+      }),
+    ).not.toBeInTheDocument();
+  });
+  it("transmet l’annulation de l’installation et affiche l’échec", async () => {
+    mock.tools.mockResolvedValue([tool("deno", false)]);
+    let fail: (error: Error) => void = () => {};
+    mock.installTools.mockReturnValue(
+      new Promise<ToolInfo[]>((_, reject) => {
+        fail = reject;
+      }),
+    );
+    mock.cancelToolsInstall.mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    render(<App />);
+    const panel = await setupPanel();
+    await user.click(
+      within(panel).getByRole("button", { name: "Télécharger et vérifier" }),
+    );
+    await user.click(
+      within(panel).getByRole("button", { name: "Annuler l’installation" }),
+    );
+    expect(mock.cancelToolsInstall).toHaveBeenCalledTimes(1);
+    await act(async () => fail(new Error("Téléchargement annulé.")));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Téléchargement annulé.",
+    );
+    expect(
+      within(panel).getByRole("button", { name: "Télécharger et vérifier" }),
+    ).toBeEnabled();
+    expect(
+      screen.queryByText("Composants installés et vérifiés."),
+    ).not.toBeInTheDocument();
   });
   it("affiche un échec de sauvegarde sans annoncer de réussite", async () => {
     mock.saveSettings.mockRejectedValue(new Error("Disque inaccessible"));

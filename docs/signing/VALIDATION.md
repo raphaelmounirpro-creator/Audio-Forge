@@ -13,7 +13,7 @@
 
 ## Non réalisé
 
-Le titulaire a ensuite choisi MIT et autorisé la publication des sources. La licence active a été ajoutée et les métadonnées mises à jour. Aucun compte SignPath créé, aucune acceptation des conditions du service, aucune candidature envoyée, aucun certificat obtenu et aucun workflow de signature exécuté.
+Le titulaire a ensuite choisi MIT et autorisé la publication des sources. La licence active a été ajoutée et les métadonnées mises à jour. Au moment de ce contrôle : aucun compte SignPath créé, aucune acceptation des conditions du service, aucune candidature envoyée, aucun certificat obtenu et aucun workflow de signature exécuté.
 
 Après ce choix, les 19 tests frontend, les 12 tests des scripts et le build Vite réussissent. Le workflow de validation sans signature est configuré pour ne publier aucun binaire téléchargeable.
 
@@ -34,6 +34,10 @@ Ce résultat prouve une construction GitHub hébergée à partir des sources pub
 
 La validation locale ne prouve pas que la fondation acceptera le projet, ni que les modèles seront acceptés sans adaptation. La candidature indique honnêtement que le projet est récent, sans réputation externe démontrée.
 
+## Mise à jour : candidature envoyée
+
+Le responsable a ensuite envoyé la candidature. SignPath Foundation en a confirmé la réception le 16 novembre 2026 et annonce une réponse sous quelques jours ouvrés. Le projet n'est ni admis ni signé.
+
 ## Étape suivante
 
-Compléter les notices/sources tierces et le dossier de release ; renseigner les informations du responsable dans la candidature officielle. L'admission SignPath, les rôles/MFA, la connexion de l'application GitHub et la politique de production précèdent toute signature réelle. Aucune de ces étapes externes n'est simulée par le workflow.
+Compléter les notices/sources tierces et le dossier de release, puis répondre aux éventuelles questions de la fondation. L'admission SignPath, les rôles/MFA, la connexion de l'application GitHub et la politique de production précèdent toute signature réelle. Aucune de ces étapes externes n'est simulée par le workflow.

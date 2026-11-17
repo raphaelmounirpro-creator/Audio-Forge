@@ -66,3 +66,19 @@ export interface ToolInfo {
   ready: boolean;
   detail: string;
 }
+/** A component archive pinned in the program (sources.lock.json). */
+export interface ToolSource {
+  repository: string;
+  version: string;
+  url: string;
+  sha256: string;
+  size: number;
+  license: string;
+  files: string[];
+}
+export interface ToolProgress {
+  repository: string;
+  stage: "download" | "verify" | "extract" | "ready";
+  received: number;
+  total: number;
+}

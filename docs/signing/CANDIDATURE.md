@@ -1,6 +1,6 @@
-# Candidature SignPath Foundation — brouillon à compléter
+# Candidature SignPath Foundation — brouillon préparé
 
-**Non envoyé. Aucun compte, abonnement, certificat ou droit SignPath créé.**
+**Candidature envoyée par le responsable ; réception confirmée par SignPath Foundation le 16 novembre 2026, examen en attente.** Ce fichier conserve le brouillon préparé avant l'envoi ; le texte réellement transmis peut en différer. Aucune admission, aucun certificat et aucun droit de signature n'ont été obtenus.
 
 ## Informations du projet
 

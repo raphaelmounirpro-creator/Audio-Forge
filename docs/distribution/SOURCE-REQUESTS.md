@@ -1,6 +1,6 @@
 # Demandes de sources à transmettre aux fournisseurs
 
-Ces messages sont des brouillons. Aucun message n’a été envoyé. Ils servent à obtenir les éléments manquants avant la distribution de l’installateur, sans prétendre que l’audit est terminé.
+**Plus nécessaires depuis le 16 novembre 2026 :** l’installateur ne redistribue plus FFmpeg ni yt-dlp, que l’application télécharge à la demande depuis leurs distributeurs officiels. Ces brouillons sont conservés pour mémoire, au cas où ces programmes seraient de nouveau intégrés. Aucun message n’a été envoyé.
 
 ## Gyan — FFmpeg 9.0.2 Essentials
 

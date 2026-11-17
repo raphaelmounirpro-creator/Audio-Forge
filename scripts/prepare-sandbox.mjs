@@ -19,6 +19,7 @@ for (const item of [
   "tests",
   "assets",
   "docs",
+  ".github",
   "package.json",
   "package-lock.json",
   "index.html",

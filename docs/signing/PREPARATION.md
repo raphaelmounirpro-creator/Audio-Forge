@@ -2,7 +2,7 @@
 
 ## État réel
 
-L'installateur 0.1.0 reste non signé. Aucun compte SignPath ou certificat n'est disponible dans cette session. Le titulaire a choisi MIT pour son code et autorisé la publication des sources et du workflow. Les obligations des binaires embarqués restent incomplètes. **La candidature n'est pas encore prête à être présentée comme admissible.**
+L'installateur 0.1.0 reste non signé. Aucun certificat n'est disponible. Le titulaire a choisi MIT pour son code et autorisé la publication des sources et du workflow. Les obligations des binaires embarqués restent incomplètes. **La candidature a été envoyée et SignPath Foundation en a confirmé la réception le 16 novembre 2026 ; l'admission n'est pas obtenue.**
 
 Les modèles XML et le workflow sont publiés. Le build GitHub hébergé [43906288257](https://github.com/raphaelmounirpro-creator/Audio-Forge/actions/runs/43906288257) a réussi les tests, la compilation et l'assemblage NSIS, sans exporter de binaire. Les modèles ne sont pas encore validés par SignPath ; aucune signature n'a été obtenue.
 

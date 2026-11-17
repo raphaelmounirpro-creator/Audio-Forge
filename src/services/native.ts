@@ -7,6 +7,8 @@ import type {
   Settings,
   Task,
   ToolInfo,
+  ToolProgress,
+  ToolSource,
 } from "../types";
 
 export const desktop = isTauri();
@@ -33,6 +35,11 @@ export const native = {
   tasks: () => call<Task[]>("get_tasks"),
   settings: () => call<Settings>("get_settings"),
   tools: () => call<ToolInfo[]>("get_tools"),
+  toolSources: () => call<ToolSource[]>("get_tool_sources"),
+  installTools: () => call<ToolInfo[]>("install_tools"),
+  cancelToolsInstall: () => call<void>("cancel_tools_install"),
+  subscribeTools: (callback: (progress: ToolProgress) => void) =>
+    listen<ToolProgress>("tools-progress", (event) => callback(event.payload)),
   saveSettings: (settings: Settings) =>
     call<void>("save_settings", { settings }),
   analyze: (url: string) => call<Media>("analyze_media", { url }),

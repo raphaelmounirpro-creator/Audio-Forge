@@ -1,10 +1,10 @@
 # Code signing policy
 
-**Statut : candidature SignPath Foundation en préparation. Aucune admission ni signature de production obtenue.** Ce document est une proposition à confirmer par le responsable du projet.
+**Statut : candidature SignPath Foundation envoyée ; réception confirmée par la fondation le 16 novembre 2026, examen en attente. Aucune admission ni signature de production obtenue.** Ce document est une proposition à confirmer par le responsable du projet.
 
 ## Périmètre proposé
 
-Signer uniquement le programme `audioforge.exe` construit à partir des sources AudioForge, puis son installateur NSIS. yt-dlp, FFmpeg, ffprobe et Deno conservent leurs signatures et licences propres ; ils ne sont pas signés au nom d'AudioForge.
+Signer uniquement le programme `audioforge.exe` construit à partir des sources AudioForge, puis son installateur NSIS. yt-dlp, FFmpeg, ffprobe et Deno ne sont pas inclus dans l'installateur : l'application les télécharge à la demande depuis leurs distributeurs officiels et vérifie leurs SHA-256. Ils conservent leurs signatures et licences propres et ne sont jamais signés au nom d'AudioForge.
 
 Le workflow manuel lie les artefacts au commit GitHub qui les construit. Chaque demande doit être soumise à une politique SignPath de production exigeant une approbation humaine. Le dépôt et le service de signature doivent utiliser l'authentification multifacteur.
 

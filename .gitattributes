@@ -1,2 +1,4 @@
 # Preserve the exact upstream licence bytes verified by notices.lock.json.
 src-tauri/binaries/licenses/** -text -whitespace
+# Generated dependency notices and their locked supplements: exact bytes.
+src-tauri/notices/** -text -whitespace

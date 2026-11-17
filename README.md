@@ -4,13 +4,15 @@ Application Windows 10/11 x64 en français pour récupérer des contenus audio e
 
 ## Téléchargement
 
-Les versions publiques seront proposées sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur n’est encore disponible : la [préparation de la release 0.1.0](docs/distribution/README.md) détaille les sources et notices restantes. L’ancien installateur local ne contient pas ces corrections.
+Les versions publiques seront proposées sur [GitHub Releases](https://github.com/raphaelmounirpro-creator/Audio-Forge/releases). Aucun installateur n’est encore disponible : la [préparation de la release 0.1.0](docs/distribution/README.md) détaille les points restants. L’ancien installateur local embarque encore yt-dlp, FFmpeg et Deno, et ne sera pas publié.
 
 ## But du projet
 
 AudioForge rend les outils yt-dlp et FFmpeg accessibles dans une interface de bureau. Le parcours principal est simple : coller un lien, analyser le média, choisir un format et suivre son traitement dans une file d'attente.
 
-Le projet impose une gratuité à **100 %** : aucun abonnement, publicité, compte AudioForge ou API payante obligatoire. Les conversions, préférences et données d'historique sont traitées localement. Internet reste nécessaire pour les médias distants et certains composants d'installation.
+Le projet impose une gratuité à **100 %** : aucun abonnement, publicité, compte AudioForge ou API payante obligatoire. Les conversions, préférences et données d'historique sont traitées localement. Internet reste nécessaire pour les médias distants et pour la première installation des composants.
+
+yt-dlp, FFmpeg et Deno ne sont pas inclus dans l'installateur. Au premier usage, AudioForge propose de les télécharger (environ 173 Mo) depuis leurs distributeurs officiels, GitHub et gyan.dev. Il vérifie leur empreinte SHA-256 avant de les enregistrer dans le profil Windows de l'utilisateur. Rien n'est téléchargé sans un clic explicite.
 
 ## Fonctionnalités
 
@@ -47,7 +49,7 @@ Les parcours complets sur chaque plateforme, la robustesse des téléchargements
 - Windows Sandbox permet un usage isolé provisoire. Ses données sont temporaires : les fichiers à conserver doivent être copiés dans le dossier partagé avant fermeture.
 - Les miniatures, les pochettes, les métadonnées complètes, le nommage avancé et les playlists progressives restent à compléter.
 - Les protections réseau et les processus enfants nécessitent encore des vérifications avant une diffusion large.
-- Les licences, notices et sources correspondantes des composants redistribués doivent être rassemblées avant une distribution publique complète.
+- Le téléchargement des composants à la demande est compilé, et l'installateur qui en dépend a été installé et démarré dans Windows Sandbox. Il reste à télécharger réellement les composants depuis l'application installée, puis à réaliser une conversion.
 - Aucun téléchargement public d'un installateur n'est annoncé dans cette présentation.
 
 ## Technologies
@@ -73,7 +75,7 @@ AudioForge est destiné aux contenus dont l'utilisateur détient les droits ou p
 
 ## Licence
 
-Le code propre d'AudioForge est distribué sous [licence MIT](LICENSE). Les composants tiers conservent leurs licences et obligations, notamment le build FFmpeg GPLv3. Voir [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+Le code propre d'AudioForge est distribué sous [licence MIT](LICENSE). Les licences des bibliothèques intégrées sont installées avec l'application. yt-dlp, FFmpeg et Deno, téléchargés depuis leurs distributeurs, conservent leurs propres licences, notamment GPLv3 pour le build FFmpeg. Voir [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
 
 ## Développement
 

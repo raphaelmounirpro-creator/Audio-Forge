@@ -57,16 +57,28 @@ try {
       "Installation NSIS : " + (result.error?.message ?? result.status),
     );
   report.installed = true;
-  const manifest = JSON.parse(
-    await readFile(join(installRoot, "binaries", "tool-lock.json"), "utf8"),
+  // Third-party programs are downloaded on request, never installed.
+  const programs = (await readdir(installRoot, { recursive: true }))
+    .map((path) => path.replaceAll("\\", "/").toLowerCase())
+    .filter((path) => /\.(?:exe|dll)$/.test(path))
+    .sort();
+  const unexpected = programs.filter(
+    (path) => !["audioforge.exe", "uninstall.exe"].includes(path),
   );
-  for (const name of ["yt-dlp", "ffmpeg", "ffprobe", "deno"]) {
-    const bytes = await readFile(join(installRoot, "binaries", name + ".exe"));
-    if (
-      createHash("sha256").update(bytes).digest("hex") !== manifest[name].sha256
-    )
-      throw new Error("Composant installé altéré : " + name);
-  }
+  if (unexpected.length)
+    throw new Error("Programmes tiers installés : " + unexpected.join(", "));
+  const inventory = JSON.parse(
+    await readFile(join(installRoot, "notices", "inventory.json"), "utf8"),
+  );
+  const notices = await readFile(
+    join(installRoot, "notices", "THIRD_PARTY_NOTICES.txt"),
+  );
+  if (
+    createHash("sha256").update(notices).digest("hex") !==
+    inventory.notices.sha256
+  )
+    throw new Error("Notices installées absentes ou altérées.");
+  report.programs = programs;
   report.resourcesVerified = true;
   const app = spawn(join(installRoot, "audioforge.exe"), [], {
     windowsHide: true,
@@ -94,7 +106,7 @@ try {
     throw new Error("La base de données n’a pas été créée.");
   report.status = "passed";
   report.scope =
-    "Installation et démarrage/processus/base/ressources ; contrôle visuel et téléchargement complet non effectués.";
+    "Installation sans programme tiers, notices intactes, démarrage/processus/base ; téléchargement des composants, contrôle visuel et téléchargement complet non effectués.";
   app.unref();
 } catch (error) {
   report.status = "failed";

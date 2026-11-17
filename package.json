@@ -25,6 +25,7 @@
     "sandbox:status": "node scripts/sandbox-status.mjs",
     "app:sandbox:prepare": "node scripts/prepare-app-sandbox.mjs",
     "tools:notices": "node scripts/tools.mjs notices",
+    "notices:deps": "node scripts/dependency-notices.mjs generate",
     "release:check": "node scripts/check-distribution.mjs"
   },
   "dependencies": {

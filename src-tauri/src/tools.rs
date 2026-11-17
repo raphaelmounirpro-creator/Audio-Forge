@@ -10,6 +10,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
+/// Expected digests, compiled into the program: never read from a writable folder.
+const TOOL_LOCK: &str = include_str!("../binaries/tool-lock.json");
+pub const NAMES: [&str; 4] = ["yt-dlp", "ffmpeg", "ffprobe", "deno"];
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct ToolRecord {
     pub version: String,
@@ -21,43 +25,39 @@ pub struct Tools {
     records: HashMap<String, ToolRecord>,
 }
 impl Tools {
+    /// Components stored in `root`, checked against the embedded lock.
     pub fn load(root: PathBuf) -> Self {
-        let records = std::fs::read(root.join("tool-lock.json"))
-            .ok()
-            .and_then(|bytes| serde_json::from_slice(&bytes).ok())
-            .unwrap_or_default();
+        let records = serde_json::from_str(TOOL_LOCK).expect("tool-lock.json intégré valide");
+        Self::with_records(root, records)
+    }
+    pub fn with_records(root: PathBuf, records: HashMap<String, ToolRecord>) -> Self {
         Self { root, records }
+    }
+    pub fn root(&self) -> &Path {
+        &self.root
+    }
+    pub fn record(&self, name: &str) -> Option<&ToolRecord> {
+        self.records.get(name)
     }
     pub fn verified(&self, name: &str) -> Result<PathBuf> {
         let record = self.records.get(name).ok_or_else(|| missing(name))?;
-        if !["yt-dlp", "ffmpeg", "ffprobe", "deno"].contains(&name) {
+        if !NAMES.contains(&name) {
             return Err(missing(name));
         }
         let path = self.root.join(format!("{name}.exe"));
         if !Path::new(&path).is_file() {
             return Err(missing(name));
         }
-        let mut file = std::fs::File::open(&path)?;
-        let mut digest = Sha256::new();
-        let mut buffer = [0u8; 65536];
-        loop {
-            let count = file.read(&mut buffer)?;
-            if count == 0 {
-                break;
-            }
-            digest.update(&buffer[..count]);
-        }
-        let hash = format!("{:x}", digest.finalize());
-        if hash != record.sha256 {
+        if sha256_file(&path)? != record.sha256 {
             return Err(AppError::new(
                 "TOOL_CORRUPTED",
-                format!("{name} a été modifié. Récupérez à nouveau les composants vérifiés."),
+                format!("{name} a été modifié. Téléchargez à nouveau les composants vérifiés."),
             ));
         }
         Ok(path)
     }
     pub fn status(&self) -> Vec<ToolInfo> {
-        ["yt-dlp", "ffmpeg", "ffprobe", "deno"]
+        NAMES
             .iter()
             .map(|name| {
                 let result = self.verified(name);
@@ -78,11 +78,26 @@ impl Tools {
             .collect()
     }
 }
+
+pub fn sha256_file(path: &Path) -> Result<String> {
+    let mut file = std::fs::File::open(path)?;
+    let mut digest = Sha256::new();
+    let mut buffer = [0u8; 65536];
+    loop {
+        let count = file.read(&mut buffer)?;
+        if count == 0 {
+            break;
+        }
+        digest.update(&buffer[..count]);
+    }
+    Ok(format!("{:x}", digest.finalize()))
+}
+
 fn missing(name: &str) -> AppError {
     AppError::new(
         "TOOL_MISSING",
         format!(
-            "Le composant {name} manque. Consultez les instructions d'installation dans le README."
+            "Le composant {name} n'est pas installé. Téléchargez les composants depuis l'accueil ou les paramètres."
         ),
     )
 }
@@ -91,14 +106,24 @@ fn missing(name: &str) -> AppError {
 mod tests {
     use super::*;
     #[test]
+    fn embedded_lock_covers_every_component() {
+        let tools = Tools::load(PathBuf::from("absent"));
+        for name in NAMES {
+            let record = tools.record(name).expect("composant verrouillé");
+            assert_eq!(record.sha256.len(), 64);
+        }
+    }
+    #[test]
     fn rejects_missing_and_tampered_binary() {
         let dir = tempfile::tempdir().unwrap();
-        std::fs::write(
-            dir.path().join("tool-lock.json"),
-            r#"{"ffmpeg":{"version":"test","sha256":"invalid"}}"#,
-        )
-        .unwrap();
-        let tools = Tools::load(dir.path().to_owned());
+        let records = HashMap::from([(
+            "ffmpeg".to_string(),
+            ToolRecord {
+                version: "test".into(),
+                sha256: "invalid".into(),
+            },
+        )]);
+        let tools = Tools::with_records(dir.path().to_owned(), records);
         assert!(tools.verified("yt-dlp").is_err());
         std::fs::write(dir.path().join("ffmpeg.exe"), b"tampered").unwrap();
         assert_eq!(tools.verified("ffmpeg").unwrap_err().code, "TOOL_CORRUPTED");

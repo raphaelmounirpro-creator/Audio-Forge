@@ -2,12 +2,10 @@
   "version": "0.1.0",
   "reviewedForPublicBinaryDistribution": false,
   "blockers": [
-    "FFmpeg Gyan 9.0.2 : sources, versions, correctifs et scripts de construction des bibliothèques statiques à obtenir ; le seul commit FFmpeg est insuffisant.",
-    "yt-dlp 2026.10.26 : sources exactes et recette de construction des dépendances incluses dans yt-dlp.exe à inventorier et rendre accessibles.",
-    "Deno v2.9.8 : notices des dépendances réellement embarquées à compléter.",
-    "AudioForge : notices des dépendances npm et Cargo réellement embarquées à compléter.",
-    "Reconstruire puis tester l’installateur contenant les notices corrigées ; ne pas publier l’ancien installateur local."
+    "AudioForge : runtime C MSVC lié statiquement (réglage par défaut de Tauri) ; conditions de redistribution de la licence Microsoft des outils de compilation à confirmer. Notices npm/Cargo générées dans src-tauri/notices, revue humaine à faire.",
+    "Téléchargement des composants à la demande : compilation, tests et installation sans programme tiers réussis dans Sandbox. Reste à télécharger réellement les composants depuis l’application installée, puis à réaliser une conversion. Ne pas publier l’ancien installateur local, qui embarque encore yt-dlp, FFmpeg et Deno."
   ],
+  "resolvedByDesign": "Depuis le 16 novembre 2026, l’installateur ne redistribue plus yt-dlp, FFmpeg ni Deno : l’application les télécharge à la demande depuis leurs distributeurs officiels et vérifie leurs SHA-256. Les demandes de sources correspondantes ne sont plus nécessaires pour publier AudioForge.",
   "knownSourceReferences": {
     "ffmpeg": "https://github.com/FFmpeg/FFmpeg/commit/946fcce07b",
     "ffmpegDistributor": "https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2",

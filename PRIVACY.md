@@ -10,7 +10,7 @@ Les préférences, la file et l'historique sont conservés dans une base SQLite 
 
 AudioForge n'intègre ni compte utilisateur, télémétrie ni service cloud AudioForge. L'analyse et le téléchargement établissent des connexions avec les plateformes et infrastructures de diffusion nécessaires au lien demandé. Ces services reçoivent notamment les informations réseau habituelles, dont l'adresse IP. Ne pas placer de liens confidentiels dans l'historique si ce stockage local ne convient pas.
 
-La récupération manuelle des composants utilise leurs distributeurs HTTPS déclarés dans `sources.lock.json`. L'installateur peut télécharger le runtime Microsoft WebView2 s'il manque. Le comportement et les conditions des plateformes, distributeurs et du runtime Microsoft restent distincts de ceux du code AudioForge ; leurs notices doivent être finalisées dans l'inventaire tiers avant diffusion.
+yt-dlp, FFmpeg et Deno ne sont pas inclus dans l'installateur. Après un clic explicite sur « Télécharger et vérifier », AudioForge les récupère en HTTPS : yt-dlp et Deno depuis GitHub (github.com, puis ses serveurs de fichiers), FFmpeg depuis gyan.dev. Ces sites reçoivent les informations réseau habituelles, dont l'adresse IP ; aucune autre donnée n'est transmise. L'installateur peut télécharger le runtime Microsoft WebView2 s'il manque. Le comportement et les conditions des plateformes, distributeurs et du runtime Microsoft restent distincts de ceux du code AudioForge ; leurs notices doivent être finalisées dans l'inventaire tiers avant diffusion.
 
 Les services de signature et d'intégration concernent la maintenance du projet. Ils ne sont pas nécessaires pour utiliser le logiciel une fois installé. Aucun jeton de signature ou secret de maintenance n'est distribué avec l'application.
 
@@ -20,4 +20,4 @@ Les données du disque jetable de Windows Sandbox sont supprimées à sa fermetu
 
 ## État de vérification
 
-Les politiques des composants tiers et du runtime, les données des diagnostics et les limites de protection réseau doivent être revues avant candidature définitive. Cette politique ne vaut pas attestation juridique ou audit complet de confidentialité.
+Les politiques des composants tiers et du runtime, les données des diagnostics et les limites de protection réseau doivent être revues avant toute distribution publique de l'installateur. Cette politique ne vaut pas attestation juridique ou audit complet de confidentialité.

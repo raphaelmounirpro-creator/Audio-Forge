@@ -33,9 +33,18 @@ import type {
   Settings,
   Task,
   ToolInfo,
+  ToolProgress,
+  ToolSource,
 } from "./types";
 import { desktop, errorMessage, native } from "./services/native";
-import { duration, splitUrls, statuses, terminal, validateUrl } from "./utils";
+import {
+  duration,
+  size,
+  splitUrls,
+  statuses,
+  terminal,
+  validateUrl,
+} from "./utils";
 
 const defaultSettings: Settings = {
   destination: "",
@@ -72,6 +81,7 @@ export function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [settings, setSettings] = useState(defaultSettings);
   const [tools, setTools] = useState<ToolInfo[]>([]);
+  const [sources, setSources] = useState<ToolSource[]>([]);
   const [notice, setNotice] = useState<{ text: string; error: boolean } | null>(
     null,
   );
@@ -103,12 +113,18 @@ export function App() {
         else stop();
       })
       .catch(report);
-    void Promise.all([native.tasks(), native.settings(), native.tools()])
-      .then(([list, preferences, components]) => {
+    void Promise.all([
+      native.tasks(),
+      native.settings(),
+      native.tools(),
+      native.toolSources(),
+    ])
+      .then(([list, preferences, components, pinned]) => {
         if (alive) {
           setTasks(list);
           setSettings(preferences);
           setTools(components);
+          setSources(pinned);
         }
       })
       .catch(report)
@@ -121,6 +137,12 @@ export function App() {
     };
   }, [report]);
   const active = tasks.filter((t) => !terminal(t.status)).length;
+  const missingTools = tools.some((t) => !t.ready);
+  function installed(list: ToolInfo[]) {
+    setTools(list);
+    if (list.every((t) => t.ready))
+      setNotice({ text: "Composants installés et vérifiés.", error: false });
+  }
   async function action(operation: () => Promise<unknown>) {
     try {
       await operation();
@@ -221,6 +243,13 @@ export function App() {
             </div>
           ) : (
             <>
+              {page === "home" && missingTools && (
+                <ToolSetup
+                  sources={sources}
+                  report={report}
+                  onInstalled={installed}
+                />
+              )}
               {page === "home" && (
                 <Home
                   settings={settings}
@@ -245,6 +274,8 @@ export function App() {
                 <Preferences
                   initial={settings}
                   tools={tools}
+                  sources={sources}
+                  onInstalled={installed}
                   report={report}
                   onSave={async (value) => {
                     await native.saveSettings(value);
@@ -906,12 +937,16 @@ function TaskList({
 function Preferences({
   initial,
   tools,
+  sources,
+  onInstalled,
   report,
   onSave,
   onTools,
 }: {
   initial: Settings;
   tools: ToolInfo[];
+  sources: ToolSource[];
+  onInstalled: (tools: ToolInfo[]) => void;
   report: (e: unknown) => void;
   onSave: (s: Settings) => Promise<void>;
   onTools: () => Promise<void>;
@@ -1066,12 +1101,135 @@ function Preferences({
           </button>
         </div>
         <ToolList tools={tools} />
-        <p className="hint">
-          Aucune mise à jour silencieuse. La récupération des composants
-          s’effectue avec les scripts documentés du projet.
-        </p>
+        {tools.some((t) => !t.ready) ? (
+          <ToolSetup
+            sources={sources}
+            report={report}
+            onInstalled={onInstalled}
+          />
+        ) : (
+          <p className="hint">
+            Téléchargés depuis leurs distributeurs officiels et vérifiés par
+            SHA-256 à chaque utilisation. Aucune mise à jour silencieuse.
+          </p>
+        )}
       </section>
     </div>
+  );
+}
+const stageLabels: Record<ToolProgress["stage"], string> = {
+  download: "Téléchargement",
+  verify: "Vérification de l’empreinte",
+  extract: "Extraction",
+  ready: "Vérifié",
+};
+function ToolSetup({
+  sources,
+  report,
+  onInstalled,
+}: {
+  sources: ToolSource[];
+  report: (e: unknown) => void;
+  onInstalled: (tools: ToolInfo[]) => void;
+}) {
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState<Record<string, ToolProgress>>({});
+  useEffect(() => {
+    if (!desktop) return;
+    let alive = true;
+    let stop: (() => void) | undefined;
+    void native
+      .subscribeTools((step) => {
+        if (alive) setProgress((old) => ({ ...old, [step.repository]: step }));
+      })
+      .then((unlisten) => {
+        if (alive) stop = unlisten;
+        else unlisten();
+      })
+      .catch(report);
+    return () => {
+      alive = false;
+      stop?.();
+    };
+  }, [report]);
+  async function install() {
+    setRunning(true);
+    setProgress({});
+    try {
+      onInstalled(await native.installTools());
+    } catch (error) {
+      report(error);
+    } finally {
+      setRunning(false);
+    }
+  }
+  const total = sources.reduce((sum, s) => sum + s.size, 0);
+  return (
+    <section className="tool-setup" aria-labelledby="tool-setup-title">
+      <h2 id="tool-setup-title">Installer les composants multimédias</h2>
+      <p>
+        AudioForge s’appuie sur des logiciels libres pour analyser, télécharger
+        et convertir. Ils ne sont pas inclus dans l’installateur : AudioForge
+        les télécharge depuis leurs distributeurs officiels, vérifie leur
+        empreinte SHA-256, puis les enregistre dans votre profil Windows.
+      </p>
+      <ul className="source-list">
+        {sources.map((s) => {
+          const step = progress[s.repository];
+          const name = s.files.map((f) => f.replace(/\.exe$/, "")).join(" et ");
+          return (
+            <li key={s.repository}>
+              <strong>{name}</strong>
+              <span>
+                {s.version} · {new URL(s.url).hostname} · {size(s.size)} ·
+                licence {s.license}
+              </span>
+              {step && (
+                <div className="progress-line">
+                  <progress
+                    aria-label={`Progression de ${name}`}
+                    value={step.stage === "download" ? step.received : 1}
+                    max={step.stage === "download" ? step.total : 1}
+                  />
+                  <span>
+                    {step.stage === "download"
+                      ? `${stageLabels.download} ${Math.floor((step.received / step.total) * 100)} %`
+                      : stageLabels[step.stage]}
+                  </span>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="hint">
+        {size(total)} au total. Ces sites reçoivent votre adresse IP, comme pour
+        tout téléchargement. Rien n’est installé si une empreinte diffère, et
+        aucune mise à jour n’est faite sans votre accord.
+      </p>
+      <div className="tool-setup-actions">
+        <button
+          className="primary"
+          disabled={running}
+          onClick={() => void install()}
+        >
+          {running ? (
+            <LoaderCircle size={18} className="spin" />
+          ) : (
+            <Download size={18} />
+          )}
+          {running ? "Installation en cours…" : "Télécharger et vérifier"}
+        </button>
+        {running && (
+          <button
+            className="secondary"
+            onClick={() => void native.cancelToolsInstall().catch(report)}
+          >
+            Annuler l’installation
+          </button>
+        )}
+      </div>
+    </section>
   );
 }
 function ToolList({ tools }: { tools: ToolInfo[] }) {
@@ -1119,18 +1277,21 @@ function About({ tools }: { tools: ToolInfo[] }) {
       <section>
         <h2>Des formats, en toute transparence.</h2>
         <p>
-          AudioForge s’appuie sur yt-dlp, FFmpeg et ffprobe. Une conversion en
-          MP3 320 kb/s ou FLAC n’améliore pas une source déjà compressée. Les
-          restrictions des plateformes restent applicables.
+          AudioForge s’appuie sur yt-dlp, FFmpeg, ffprobe et Deno. Une
+          conversion en MP3 320 kb/s ou FLAC n’améliore pas une source déjà
+          compressée. Les restrictions des plateformes restent applicables.
         </p>
       </section>
       <section>
         <h2>Composants et licences</h2>
         <ToolList tools={tools} />
         <p>
-          Les versions, sources et obligations de redistribution sont suivies
-          dans THIRD_PARTY_LICENSES.md. Le code AudioForge est sous licence MIT
-          ; les composants tiers conservent leurs licences respectives.
+          Le code AudioForge est sous licence MIT. Les licences des
+          bibliothèques intégrées sont installées avec l’application, dans
+          notices/THIRD_PARTY_NOTICES.txt. yt-dlp, FFmpeg et Deno ne sont pas
+          inclus dans l’installateur : ils sont téléchargés à votre demande
+          depuis leurs distributeurs officiels et restent soumis à leurs propres
+          licences.
         </p>
       </section>
       <section>
