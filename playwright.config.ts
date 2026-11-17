@@ -9,9 +9,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    // Production build of the website, served with the Vercel headers.
-    command: "npm run web:build && npm run web:preview",
-    timeout: 180_000,
+    command: "npm run dev",
     url: "http://127.0.0.1:1420",
     reuseExistingServer: !process.env.CI,
   },

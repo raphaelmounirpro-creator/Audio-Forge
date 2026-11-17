@@ -14,12 +14,6 @@ yt-dlp, FFmpeg et Deno ne sont pas inclus dans l'installateur. Après un clic ex
 
 Les services de signature et d'intégration concernent la maintenance du projet. Ils ne sont pas nécessaires pour utiliser le logiciel une fois installé. Aucun jeton de signature ou secret de maintenance n'est distribué avec l'application.
 
-## Version web
-
-Les fichiers choisis sur le site sont lus et convertis dans le navigateur, puis gardés en mémoire jusqu'à la fermeture ou au rechargement de l'onglet. Ils ne sont transmis à aucun serveur. Le site ne pose pas de cookie et n'intègre ni compte, ni publicité, ni mesure d'audience.
-
-L'hébergeur du site (Vercel) reçoit les informations réseau habituelles, dont l'adresse IP, lors du chargement des pages et du moteur de conversion. Ses journaux relèvent de sa propre politique de confidentialité. Un lien direct ajouté par l'utilisateur est lu depuis son site d'origine, qui reçoit les mêmes informations.
-
 ## Environnement isolé
 
 Les données du disque jetable de Windows Sandbox sont supprimées à sa fermeture. Les fichiers copiés dans le dossier d'export partagé restent sur le PC hôte. Si l'utilisateur autorise le presse-papiers partagé, son contenu devient accessible aux applications de Sandbox.
