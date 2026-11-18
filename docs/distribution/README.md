@@ -19,7 +19,7 @@ Les points restants sont dans [STATUS.json](STATUS.json).
 ## Avant publication
 
 1. Résoudre les points de STATUS.json : conditions du runtime C MSVC lié statiquement et revue humaine des notices générées.
-2. Compiler et tester dans Sandbox, installer le nouvel installateur, vérifier qu'il ne contient aucun programme tiers et que ses notices sont intactes, puis télécharger les composants depuis l'application et réaliser une conversion.
+2. Vérifier que le paquet destiné à la release correspond à l’empreinte du paquet installé et testé dans Sandbox. Le [rapport de validation](VALIDATION.md#validation-du-paquet-actuel--18-novembre-2026) consigne le téléchargement des composants et la conversion réussis dans l’application.
 3. Exécuter `npm run release:check`.
 4. Créer la GitHub Release `v0.1.0` depuis le commit validé, avec l'installateur reconstruit et SHA256SUMS. Indiquer clairement son absence de signature si l'admission est encore en attente.
 5. Télécharger les fichiers depuis la release publique et comparer leurs empreintes. Mettre à jour la page de téléchargement puis la candidature avec cette URL.

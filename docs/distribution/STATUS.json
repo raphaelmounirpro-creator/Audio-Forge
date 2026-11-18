@@ -2,8 +2,7 @@
   "version": "0.1.0",
   "reviewedForPublicBinaryDistribution": false,
   "blockers": [
-    "AudioForge : runtime C MSVC lié statiquement (réglage par défaut de Tauri) ; conditions de redistribution de la licence Microsoft des outils de compilation à confirmer. Notices npm/Cargo générées dans src-tauri/notices, revue humaine à faire.",
-    "Téléchargement des composants à la demande : compilation, tests et installation sans programme tiers réussis dans Sandbox. Reste à télécharger réellement les composants depuis l’application installée, puis à réaliser une conversion. Ne pas publier l’ancien installateur local, qui embarque encore yt-dlp, FFmpeg et Deno."
+    "AudioForge : conditions de redistribution du runtime C MSVC lié statiquement à confirmer pour l’édition et la licence des outils de compilation effectivement utilisés. Revue humaine des notices npm/Cargo générées dans src-tauri/notices à finaliser."
   ],
   "resolvedByDesign": "Depuis le 16 novembre 2026, l’installateur ne redistribue plus yt-dlp, FFmpeg ni Deno : l’application les télécharge à la demande depuis leurs distributeurs officiels et vérifie leurs SHA-256. Les demandes de sources correspondantes ne sont plus nécessaires pour publier AudioForge.",
   "knownSourceReferences": {

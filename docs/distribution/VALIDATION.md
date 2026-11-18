@@ -1,5 +1,14 @@
 # Validation des corrections de distribution
 
+## Validation du paquet actuel — 18 novembre 2026
+
+- Le [workflow Windows](https://github.com/raphaelmounirpro-creator/Audio-Forge/actions/runs/44182082233) du commit `f87e558` a terminé les tests, la compilation et l’assemblage NSIS. Les étapes conditionnelles de signature et d’export sont restées ignorées.
+- L’installateur local de 3 437 897 octets, SHA-256 `C0210F9F36ADDCEC2220A4F90C5E79BA8FABAA86B0D38A6AA55BFA97D0A69FC7`, s’est installé dans un Windows Sandbox neuf avec le code 0. AudioForge a démarré et créé SQLite. Le dossier d’installation contenait uniquement `audioforge.exe` et `uninstall.exe` comme exécutables. La notice installée correspond à l’inventaire.
+- Après le déclenchement de l’installation dans l’interface, les SHA-256 de yt-dlp, FFmpeg, ffprobe et Deno ont été comparés au verrou. Les quatre outils correspondent.
+- L’application installée a importé une liste TXT via le sélecteur Windows, analysé un clip Wikimedia CC0 et produit un MP3 de 121 140 octets, d’une durée de 4,970667 secondes. FFprobe a confirmé une seule piste audio MP3. La tâche « Terminé » et la présence du fichier ont été observées dans l’historique après fermeture et relance par le raccourci Windows. [Clip de validation](https://commons.wikimedia.org/wiki/File:CC_BY-SA_video_bumper.webm)
+- Le sélecteur multimédia de l’application installée a également ouvert ce MP3 pour une conversion locale. FFprobe a vérifié le FLAC de 678 109 octets et l’empreinte du MP3 source est restée identique.
+- La vérification de distribution conserve la revue des notices et des conditions du runtime statique. La documentation Microsoft distingue les droits d’usage des Build Tools selon la licence disponible et les droits de redistribution des fichiers désignés. La présence de notices n’établit pas à elle seule que la licence applicable autorise le paquet. [Licence Build Tools 2022](https://visualstudio.microsoft.com/license-terms/vs2022-ga-diagnosticbuildtools/) · [Code redistribuable Visual Studio 2022](https://learn.microsoft.com/en-us/visualstudio/releases/2022/redistribution)
+
 Contrôles effectués le 16 novembre 2026 :
 
 - 19 tests frontend réussis ; compilation TypeScript/Vite réussie.

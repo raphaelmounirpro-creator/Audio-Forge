@@ -35,7 +35,7 @@ La conversion en FLAC ou MP3 320 kb/s n'améliore pas la qualité d'une source d
 
 ## État du développement
 
-Un premier paquet de la version de développement **0.1.0** a démarré dans Windows Sandbox et créé sa base SQLite. L’installateur du lot actuel a été compilé. Son sélecteur de fichiers et le parcours complet de téléchargement dans l’application installée restent à vérifier.
+Le paquet **0.1.0** a démarré dans un Windows Sandbox neuf et créé SQLite. Dans l’application installée, le téléchargement vérifié des composants, l’import TXT, le téléchargement d’un clip Wikimedia, sa conversion MP3 et la présence du fichier dans l’historique après redémarrage ont été contrôlés. [Rapport de validation](docs/distribution/VALIDATION.md)
 
 Les validations enregistrées comprennent :
 
@@ -52,7 +52,7 @@ Les parcours complets sur chaque plateforme, la robustesse des téléchargements
 - Windows Sandbox permet un usage isolé provisoire. Ses données sont temporaires : les fichiers à conserver doivent être copiés dans le dossier partagé avant fermeture.
 - Les miniatures, les pochettes, les métadonnées complètes et le nommage avancé restent à compléter.
 - Les protections réseau et les processus enfants nécessitent encore des vérifications avant une diffusion large.
-- Le téléchargement des composants à la demande est compilé, et l'installateur qui en dépend a été installé et démarré dans Windows Sandbox. Il reste à télécharger réellement les composants depuis l'application installée, puis à réaliser une conversion.
+- Le téléchargement des composants et les conversions ont été vérifiés dans Windows Sandbox sur le média public d’essai. La revue de distribution reste ouverte.
 - Aucun téléchargement public d'un installateur n'est annoncé dans cette présentation.
 
 ## Technologies
